@@ -1,3 +1,4 @@
+<!-- Copyright 2026 Nasif Hossain | endoscorpion@gmail.com | All rights reserved. -->
 # Win Logic Report — Cycle 39 (2026-10-20)
 _Updated: 2026-10-20 — ECN pts (5-digit; $0.10/pt at 0.1 lot). Cost deducted. Past results ≠ advice._
 
@@ -86,7 +87,7 @@ WP/w ≈ +12.7 pts · WP/m ≈ +54 pts · WP/yr ≈ +$440 (0.1 lot)
 ## #StackC — BEST (Legs 1+2+3+4b, Leg 2 reduced size, #NFP filter)
 
 | Period | n | WR% | PF | Net $ | Max DD |
-|---|---|---|---|---|
+|---|---|---|---|---|---|
 | IS 2024-26 | 152 | 62% | 2.97 | +$859 | $76 |
 | OOS 2020-23 | 175 | 66% | 2.94 | +$1,785 | $92 |
 | ALL 2020-26 | 327 | ~64% | ~2.96 | +$2,644 | $92 |
