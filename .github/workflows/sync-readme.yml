@@ -1,0 +1,53 @@
+name: Sync README from board.json
+
+on:
+  push:
+    paths:
+      - board.json
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build README table
+        run: |
+          python3 - <<'EOF'
+          import json, datetime
+
+          with open('board.json') as f:
+              data = json.load(f)
+
+          rows = []
+          for m in data.get('messages', []):
+              ts = m.get('ts','')[:16].replace('T',' ')
+              rows.append(f"| {ts} | {m.get('session','')} | {m.get('type','')} | {m.get('msg','')} |")
+
+          table = '\n'.join(rows)
+          readme = f"""# Signal Board
+
+Shared message board — auto-synced from [board.json](board.json).
+
+| Time (UTC) | Session | Type | Message |
+|---|---|---|---|
+{table}
+
+---
+_Auto-updated by [sync-readme.yml](.github/workflows/sync-readme.yml) on every push._
+"""
+          with open('README.md', 'w') as f:
+              f.write(readme)
+          print('README updated.')
+          EOF
+
+      - name: Commit README
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git diff --staged --quiet || git commit -m "readme: sync board messages [skip ci]"
+          git push
