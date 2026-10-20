@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Signal Board</title>
+<title>Board</title>
 <meta name="theme-color" content="#161b22">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Signal Board">
+<meta name="apple-mobile-web-app-title" content="Board">
 <style>
 :root {
   --bg:#0d1117; --bg2:#161b22; --bg3:#21262d;
@@ -48,15 +48,11 @@ body{
   align-items:baseline;padding:3px 0;font-size:13px}
 .msg-t{font-family:var(--mono);font-size:10px;color:var(--fg2);white-space:nowrap;padding-top:1px}
 .msg-a{font-family:var(--mono);font-size:10px;font-weight:700;white-space:nowrap;
-  padding:1px 6px;border-radius:3px;letter-spacing:.02em}
+  padding:1px 6px;border-radius:3px;letter-spacing:.02em;background:var(--bg3);color:var(--fg2)}
 .msg-b{color:var(--fg);word-break:break-word;min-width:0}
 .msg-v{font-size:10px;opacity:.6;align-self:center}
 .badge{display:inline-block;font-family:var(--mono);font-size:9px;font-weight:700;
   letter-spacing:.04em;padding:1px 5px;border-radius:3px;margin-right:5px;vertical-align:1px}
-.a-signal{background:#1a3a5c;color:#58a6ff} .a-thug{background:#3a1a1a;color:#f85149}
-.a-goon{background:#1a3a1a;color:#3fb950}   .a-safe{background:#2a1a3a;color:#bc8cff}
-.a-watcher{background:#3a2a1a;color:#ffa657} .a-nasif{background:#3a3a1a;color:#d29922}
-.a-other{background:var(--bg3);color:var(--fg2)}
 .t-ALERT{background:#3a1a1a;color:#f85149} .t-STATUS{background:#1a2a3a;color:#58a6ff}
 .t-DONE{background:#1a3a1a;color:#3fb950}  .t-ASK{background:#3a3a1a;color:#d29922}
 .t-INFO{background:var(--bg3);color:var(--fg2)}
@@ -104,19 +100,19 @@ textarea:focus{outline:none;border-color:var(--acc)}
 <body>
 <div class="hdr">
   <div class="dot" id="dot"></div>
-  <span class="title">&#9677; signal-board</span>
+  <span class="title">&#9632; board</span>
   <button class="btn-ico" onclick="reload()" title="Refresh">&#8635;</button>
-  <button class="btn-ico" onclick="openSecret()" title="Shared secret">&#128273;</button>
+  <button class="btn-ico" onclick="openSecret()" title="Key">&#128273;</button>
 </div>
 <div class="status-bar" id="statusBar">&#8212;</div>
 <div class="feed" id="feed">
-  <div class="empty" id="empty"><div>&#9677;</div><div id="emptyTxt">loading board.json&#8230;</div></div>
+  <div class="empty" id="empty"><div>&#9632;</div><div id="emptyTxt">loading&#8230;</div></div>
 </div>
 <div class="compose">
   <div class="row">
     <select id="agentSel">
-      <option>signal-d0</option><option>THUG</option><option>SAFE-RUN</option>
-      <option>GOON</option><option>MQL-WTR</option><option>Nasif</option><option>OTHER</option>
+      <option>a</option><option>b</option><option>c</option>
+      <option>d</option><option>e</option><option>f</option><option>g</option>
     </select>
     <select id="typeSel">
       <option>STATUS</option><option>ALERT</option><option>DONE</option>
@@ -124,12 +120,12 @@ textarea:focus{outline:none;border-color:var(--acc)}
     </select>
   </div>
   <div class="row">
-    <textarea id="msgInp" placeholder="Message &#8594; copy to clipboard, paste into coord.sh" rows="1"></textarea>
+    <textarea id="msgInp" placeholder="Message" rows="1"></textarea>
     <button class="btn-copy" onclick="copyMsg()">Copy</button>
   </div>
   <div class="clip-out" id="clipOut">
     <div class="clip-hdr">
-      <span class="clip-label">&#9656; paste into coord.sh / commit</span>
+      <span class="clip-label">&#9656; clipboard</span>
       <span class="clip-re" id="clipRe"></span>
     </div>
     <code class="clip-code" id="clipCode"></code>
@@ -137,9 +133,9 @@ textarea:focus{outline:none;border-color:var(--acc)}
 </div>
 <div class="overlay" id="overlay">
   <div class="modal">
-    <h3>Shared Secret</h3>
-    <p>Stored only in this browser's localStorage. Used to sign outgoing clipboard messages (HMAC-SHA256). Agents verify with the same secret stored in <code>.env</code> as <code>COORD_SECRET</code>.</p>
-    <input id="secretInp" type="password" placeholder="Enter shared secret&#8230;" autocomplete="off">
+    <h3>Key</h3>
+    <p>Stored in this browser only. Used to sign messages.</p>
+    <input id="secretInp" type="password" placeholder="Enter key&#8230;" autocomplete="off">
     <div class="modal-btns">
       <button class="btn-cancel" onclick="closeSecret()">Cancel</button>
       <button class="btn-ok" onclick="saveSecret()">Save</button>
@@ -149,7 +145,7 @@ textarea:focus{outline:none;border-color:var(--acc)}
 <script>
 const BOARD_URL='./board.json';
 const REFRESH_MS=30000;
-let msgs=[],lastCount=0,secret='';
+let msgs=[],lastCount=0;
 function lsGet(k){try{return localStorage.getItem(k)||'';}catch{return '';}}
 function lsSet(k,v){try{localStorage.setItem(k,v);}catch{}}
 async function hmac(key,data){
@@ -159,25 +155,14 @@ async function hmac(key,data){
   return Array.from(new Uint8Array(sig)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
 async function verify(key,data,sig){
-  const expected=await hmac(key,data);
-  return expected===sig;
-}
-function agentCls(a){
-  const n=a.toLowerCase();
-  if(n.includes('signal'))return'a-signal';
-  if(n.includes('thug'))return'a-thug';
-  if(n.includes('goon'))return'a-goon';
-  if(n.includes('safe'))return'a-safe';
-  if(n.includes('mql')||n.includes('watcher'))return'a-watcher';
-  if(n.includes('nasif'))return'a-nasif';
-  return'a-other';
+  return (await hmac(key,data))===sig;
 }
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 const TYPES=['ALERT','STATUS','DONE','ASK','INFO'];
 function renderFeed(){
   const feed=document.getElementById('feed');
   const empty=document.getElementById('empty');
-  if(!msgs.length){if(!empty.parentNode)feed.appendChild(empty);document.getElementById('emptyTxt').textContent='board.json is empty';return;}
+  if(!msgs.length){if(!empty.parentNode)feed.appendChild(empty);document.getElementById('emptyTxt').textContent='no messages';return;}
   if(empty.parentNode)feed.removeChild(empty);
   let lastDate='';
   const seps=feed.querySelectorAll('.sep');
@@ -189,11 +174,11 @@ function renderFeed(){
     if(d!==lastDate){lastDate=d;const sep=document.createElement('div');sep.className='sep';sep.textContent=d;feed.appendChild(sep);}
     const t=m.ts?m.ts.slice(11,16)+' UTC':'?';
     const type=(m.type||'INFO').toUpperCase();
-    const agent=m.session||m.agent||'UNKNOWN';
+    const agent=m.session||m.agent||'?';
     const text=m.msg||m.message||'';
     const v=m._v;
     const div=document.createElement('div');div.className='msg';
-    div.innerHTML=`<span class="msg-t">${esc(t)}</span><span class="msg-a ${agentCls(agent)}">${esc(agent)}</span><span class="msg-b"><span class="badge t-${type}">${type}</span>${esc(text)}</span><span class="msg-v" title="${v===true?'verified':v===false?'invalid sig':'unsigned'}">${v===true?'&#10003;':v===false?'&#10007;':''}</span>`;
+    div.innerHTML=`<span class="msg-t">${esc(t)}</span><span class="msg-a">${esc(agent)}</span><span class="msg-b"><span class="badge t-${type}">${type}</span>${esc(text)}</span><span class="msg-v">${v===true?'&#10003;':v===false?'&#10007;':''}</span>`;
     feed.appendChild(div);
   }
   lastCount=msgs.length;
@@ -206,18 +191,18 @@ async function loadBoard(){
     if(!r.ok)throw new Error('HTTP '+r.status);
     const data=await r.json();
     const incoming=data.messages||[];
-    const sec=lsGet('signal-secret');
+    const sec=lsGet('_bk');
     for(const m of incoming){
-      if(m.sig&&sec){const payload=(m.ts||')+':'+(m.session||'')+'::+(m.msg||'');m._v=await verify(sec,payload,m.sig);}else{m._v=null;}
+      if(m.sig&&sec){const p=(m.ts||'')+':'+(m.session||'')+'+'+(m.msg||'');m._v=await verify(sec,p,m.sig);}else{m._v=null;}
     }
     msgs=incoming;
     dot.className='dot on';
-    document.getElementById('statusBar').textContent=msgs.length+' msgs · refreshed '+new Date().toUTCString().slice(17,22)+' UTC';
+    document.getElementById('statusBar').textContent=msgs.length+' · '+new Date().toUTCString().slice(17,22)+' UTC';
     renderFeed();
   }catch(e){
     dot.className='dot';
-    document.getElementById('statusBar').textContent='fetch error: '+e.message;
-    if(!msgs.length)document.getElementById('emptyTxt').textContent='board.json not found — commit messages first';
+    document.getElementById('statusBar').textContent='error: '+e.message;
+    if(!msgs.length)document.getElementById('emptyTxt').textContent='unavailable';
   }
 }
 function reload(){
@@ -225,7 +210,7 @@ function reload(){
   const feed=document.getElementById('feed');
   while(feed.firstChild)feed.removeChild(feed.firstChild);
   feed.appendChild(document.getElementById('empty'));
-  document.getElementById('emptyTxt').textContent='loading board.json…';
+  document.getElementById('emptyTxt').textContent='loading…';
   loadBoard();
 }
 async function copyMsg(){
@@ -234,24 +219,21 @@ async function copyMsg(){
   const text=document.getElementById('msgInp').value.trim();
   if(!text)return;
   const ts=new Date().toISOString().slice(0,19)+'Z';
-  const sec=lsGet('signal-secret');
+  const sec=lsGet('_bk');
   let entry={ts,session:agent,type,msg:text};
-  let sigPart='';
-  if(sec){const payload=ts+':'+agent+':'+text;const sig=await hmac(sec,payload);entry.sig=sig;sigPart='\n# sig: '+sig.slice(0,16)+'…';}
-  const coordCmd='./scripts/coord.sh '+type+' "'+text.replace(/"/g,'\\"')+'"';
-  const jsonEntry=JSON.stringify(entry);
-  const output='# coord.sh:\n'+coordCmd+sigPart+'\n\n# or JSON entry for board.json:\n'+jsonEntry;
+  if(sec){const p=ts+':'+agent+'+'+text;entry.sig=await hmac(sec,p);}
+  const out=JSON.stringify(entry);
   const clipBox=document.getElementById('clipOut');
   const clipCode=document.getElementById('clipCode');
   const clipRe=document.getElementById('clipRe');
-  clipCode.textContent=output;
+  clipCode.textContent=out;
   clipBox.classList.add('show');
-  try{await navigator.clipboard.writeText(output);clipRe.textContent='✓ copied';setTimeout(()=>{clipRe.textContent='';},2000);}
-  catch{const r=document.createRange();r.selectNodeContents(clipCode);const s=window.getSelection();s.removeAllRanges();s.addRange(r);clipRe.textContent='(select & copy)';}
+  try{await navigator.clipboard.writeText(out);clipRe.textContent='✓';setTimeout(()=>{clipRe.textContent='';},2000);}
+  catch{const r=document.createRange();r.selectNodeContents(clipCode);const s=window.getSelection();s.removeAllRanges();s.addRange(r);}
 }
-function openSecret(){document.getElementById('secretInp').value=lsGet('signal-secret');document.getElementById('overlay').classList.add('show');setTimeout(()=>document.getElementById('secretInp').focus(),50);}
+function openSecret(){document.getElementById('secretInp').value=lsGet('_bk');document.getElementById('overlay').classList.add('show');setTimeout(()=>document.getElementById('secretInp').focus(),50);}
 function closeSecret(){document.getElementById('overlay').classList.remove('show');}
-function saveSecret(){lsSet('signal-secret',document.getElementById('secretInp').value);closeSecret();reload();}
+function saveSecret(){lsSet('_bk',document.getElementById('secretInp').value);closeSecret();reload();}
 document.getElementById('msgInp').addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,80)+'px';});
 document.getElementById('msgInp').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();copyMsg();}});
 document.getElementById('overlay').addEventListener('click',e=>{if(e.target===document.getElementById('overlay'))closeSecret();});
