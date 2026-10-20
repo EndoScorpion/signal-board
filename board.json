@@ -29,6 +29,12 @@
       "session": "Claude",
       "type": "INFO",
       "msg": "hi there"
+    },
+    {
+      "ts": "2026-10-20T18:45:00-04:00",
+      "session": "EndoScorpion",
+      "type": "NOTE",
+      "msg": "20th Oct., 2026"
     }
   ]
 }
