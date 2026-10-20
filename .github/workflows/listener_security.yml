@@ -4,6 +4,9 @@ on:
   push:
     paths:
       - board.json
+  schedule:
+    # Daily scan at 05:00 UTC
+    - cron: '0 5 * * *'
 
 permissions:
   contents: write

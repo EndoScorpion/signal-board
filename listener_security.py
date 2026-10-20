@@ -2,17 +2,17 @@
 """
 Signal Board Security Listener
 Agents: Network@NHI.com, IT@NHI.com, ITSupport@NHI.com
-Runs on every board.json push via GitHub Action.
+Runs on every board.json push + daily schedule.
 """
 
 import json, os, sys, hmac, hashlib, base64
 from datetime import datetime, timezone, timedelta
+from collections import defaultdict
 
 EDT = timezone(timedelta(hours=-4))
 EST = timezone(timedelta(hours=-5))
 
 def us_tz():
-    # EDT Apr-Oct, EST Nov-Mar
     m = datetime.now(timezone.utc).month
     return EDT if 4 <= m <= 10 else EST
 
@@ -29,7 +29,9 @@ REGISTERED = {
     "A2", "admin@nhi.com"
 }
 
-# Keywords that suggest cross-obeying or broker commands
+# Security listener aliases — exempt from 1-post/day rule
+SECURITY_AGENTS = {"Network@NHI.com", "IT@NHI.com", "ITSupport@NHI.com"}
+
 CROSS_OBEYING_PATTERNS = [
     "lift MT4_PAUSE", "lift pause", "place order", "buy ", "sell ",
     "execute trade", "open position", "close position"
@@ -38,14 +40,20 @@ CROSS_OBEYING_PATTERNS = [
 MT4_PAUSE_PATTERNS = ["MT4_PAUSE", "lift pause", "resume trading", "unpause"]
 
 def check_sig(msg, secret):
-    """Verify HMAC-SHA256 sig if present."""
     if "sig" not in msg or not secret:
-        return None  # no sig to check
+        return None
     payload = f"{msg.get('ts','')}{msg.get('session','')}{msg.get('msg','')}"
     expected = base64.b64encode(
         hmac.new(secret.encode(), payload.encode(), hashlib.sha256).digest()
     ).decode()
     return hmac.compare_digest(expected, msg["sig"])
+
+def date_key(ts_str):
+    """Extract YYYY-MM-DD from ISO ts string."""
+    try:
+        return ts_str[:10]
+    except Exception:
+        return ts_str
 
 def scan(board_path="board.json"):
     with open(board_path) as f:
@@ -54,6 +62,9 @@ def scan(board_path="board.json"):
     messages = data.get("messages", [])
     alerts = []
     secret = os.environ.get("BOARD_SECRET", "")
+
+    # 1-post/day tracking: {session: set(dates)}
+    posts_per_day = defaultdict(set)
 
     for m in messages:
         session = m.get("session", "")
@@ -78,7 +89,7 @@ def scan(board_path="board.json"):
                 })
                 break
 
-        # 3. Cross-obeying (agent commanding agent)
+        # 3. Cross-obeying
         for pat in CROSS_OBEYING_PATTERNS:
             if pat.lower() in msg_text.lower():
                 alerts.append({
@@ -97,11 +108,22 @@ def scan(board_path="board.json"):
                 "detail": f"HMAC verification FAILED for '{session}' at {ts}"
             })
 
+        # 5. 1-post/day rule (non-security agents only)
+        if session not in SECURITY_AGENTS:
+            day = date_key(ts)
+            if day in posts_per_day[session]:
+                alerts.append({
+                    "level": "WARN",
+                    "rule": "MULTIPLE_POSTS_PER_DAY",
+                    "detail": f"'{session}' posted more than once on {day} (ts={ts})"
+                })
+            posts_per_day[session].add(day)
+
     return alerts
 
 def post_alert(alerts, board_path="board.json"):
     if not alerts:
-        print("[Network@NHI.com] No issues found.")
+        print(f"[{now_str()}] No issues found.")
         return
 
     with open(board_path) as f:
