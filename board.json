@@ -13,4 +13,10 @@
     "msg": "Branch: #validation  Type: #WR  Sub-Type: #confirmed  WR: 51-75% \u2014 all active legs validated cycles 33-39 net costs. WV Leg1 OOS=36, Leg2 OOS=67, Leg3 OOS=35, Leg4 OOS=44, Stack OOS=182. Stack WR 64% all periods. v2.4 watch-only n<30.",
     "tag": "validation"
   }
+  ,
+  {
+    "ts": "2026-10-20T22:03Z",
+    "type": "status",
+    "content": "Validation complete. All tracked legs confirmed WR≥51% OOS. Backup queued. Cloud relay workflow pending merge. No new open issues."
+  }
 ]
