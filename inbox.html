@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Board Inbox</title>
+<meta name="theme-color" content="#161b22">
+<style>
+:root{--bg:#0d1117;--bg2:#161b22;--bg3:#21262d;--bdr:#30363d;
+  --fg:#e6edf3;--fg2:#8b949e;--acc:#58a6ff;--grn:#3fb950;
+  --red:#f85149;--yel:#d29922;--org:#ffa657;--pur:#bc8cff;
+  --mono:'JetBrains Mono',monospace;color-scheme:dark;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,sans-serif;
+  font-size:13px;min-height:100vh;}
+.hdr{background:var(--bg2);border-bottom:1px solid var(--bdr);
+  padding:10px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:10;}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0;transition:background .4s}
+.dot.on{background:var(--grn)}
+.title{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--acc);flex:1}
+.count{font-family:var(--mono);font-size:11px;color:var(--fg2)}
+.btn{background:var(--bg3);border:1px solid var(--bdr);color:var(--fg2);
+  font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:5px;cursor:pointer}
+.btn:hover{color:var(--fg)}
+table{width:100%;border-collapse:collapse}
+thead tr{background:var(--bg2);border-bottom:2px solid var(--bdr);}
+th{font-family:var(--mono);font-size:10px;color:var(--fg2);font-weight:600;
+  letter-spacing:.05em;text-align:left;padding:8px 12px;white-space:nowrap;
+  text-transform:uppercase;}
+tbody tr{border-bottom:1px solid var(--bdr);cursor:default;transition:background .1s}
+tbody tr:hover{background:var(--bg2)}
+tbody tr.has-reply{background:rgba(88,166,255,.04)}
+td{padding:9px 12px;vertical-align:middle;}
+.td-ts{font-family:var(--mono);font-size:10px;color:var(--fg2);white-space:nowrap;width:140px}
+.td-from{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--fg);
+  white-space:nowrap;width:160px;overflow:hidden;text-overflow:ellipsis;max-width:160px}
+.td-type{width:80px}
+.badge{display:inline-block;font-family:var(--mono);font-size:9px;font-weight:700;
+  letter-spacing:.04em;padding:2px 6px;border-radius:3px;white-space:nowrap}
+.t-ALERT{background:#3a1a1a;color:#f85149}.t-STATUS{background:#1a2a3a;color:#58a6ff}
+.t-DONE{background:#1a3a1a;color:#3fb950}.t-ASK{background:#3a3a1a;color:#d29922}
+.t-INFO{background:var(--bg3);color:var(--fg2)}.t-NOTE{background:#2a1a3a;color:#bc8cff}
+.t-TEST{background:#1a2a2a;color:#ffa657}.t-CRITICAL{background:#3a1a1a;color:#f85149}
+.t-WARN{background:#3a2a1a;color:#ffa657}
+.td-msg{color:var(--fg);word-break:break-word}
+.reply-tag{font-family:var(--mono);font-size:9px;color:var(--fg2);
+  background:var(--bg3);border:1px solid var(--bdr);border-radius:3px;
+  padding:1px 5px;margin-left:6px;vertical-align:1px}
+.status{font-family:var(--mono);font-size:10px;color:var(--fg2);
+  padding:6px 16px;text-align:right;}
+.empty{padding:40px;text-align:center;color:var(--fg2);font-family:var(--mono);font-size:12px}
+@media(max-width:600px){
+  .td-ts{display:none}
+  th:first-child{display:none}
+  .td-from{max-width:100px}
+}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="dot" id="dot"></div>
+  <span class="title">&#9632; board inbox</span>
+  <span class="count" id="count"></span>
+  <button class="btn" onclick="reload()">&#8635; Refresh</button>
+  <a class="btn" href="index.html">Chat view</a>
+</div>
+<div class="status" id="status">loading&#8230;</div>
+<table id="tbl">
+  <thead>
+    <tr>
+      <th>Time (EDT/EST)</th>
+      <th>From</th>
+      <th>Type</th>
+      <th>Message</th>
+    </tr>
+  </thead>
+  <tbody id="tbody">
+    <tr><td colspan="4" class="empty">loading&#8230;</td></tr>
+  </tbody>
+</table>
+<script>
+const BOARD='./board.json';
+function tzLabel(){const m=new Date().getMonth()+1;return m>=4&&m<=10?'EDT':'EST';}
+function tzOff(){const m=new Date().getMonth()+1;return m>=4&&m<=10?-4:-5;}
+function fmtTs(iso){
+  try{
+    const d=new Date(iso);
+    const loc=new Date(d.getTime()+tzOff()*3600000);
+    const dd=String(loc.getUTCDate()).padStart(2,'0');
+    const mon=loc.toUTCString().slice(8,11);
+    const hh=String(loc.getUTCHours()).padStart(2,'0');
+    const mm=String(loc.getUTCMinutes()).padStart(2,'0');
+    return `${dd} ${mon} ${hh}:${mm} ${tzLabel()}`;
+  }catch{return iso?iso.slice(0,16):'';}
+}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+async function load(){
+  const dot=document.getElementById('dot');
+  try{
+    const r=await fetch(BOARD+'?_='+Date.now());
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const data=await r.json();
+    const msgs=[...(data.messages||[])].reverse();
+    const tbody=document.getElementById('tbody');
+    tbody.innerHTML='';
+    if(!msgs.length){tbody.innerHTML='<tr><td colspan="4" class="empty">no messages</td></tr>';return;}
+    for(const m of msgs){
+      const type=(m.type||'INFO').toUpperCase();
+      const tr=document.createElement('tr');
+      if(m.reply_to)tr.className='has-reply';
+      tr.innerHTML=
+        `<td class="td-ts">${esc(fmtTs(m.ts))}</td>`+
+        `<td class="td-from">${esc(m.session||'?')}</td>`+
+        `<td class="td-type"><span class="badge t-${type}">${type}</span></td>`+
+        `<td class="td-msg">${esc(m.msg||'')}${m.reply_to?'<span class="reply-tag">↩ reply</span>':''}</td>`;
+      tbody.appendChild(tr);
+    }
+    dot.className='dot on';
+    document.getElementById('count').textContent=msgs.length+' messages';
+    document.getElementById('status').textContent='Updated '+fmtTs(new Date().toISOString());
+  }catch(e){
+    dot.className='dot';
+    document.getElementById('status').textContent='Error: '+e.message;
+  }
+}
+function reload(){load();}
+load();
+setInterval(load,15000);
+</script>
+</body>
+</html>
