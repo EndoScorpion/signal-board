@@ -68,10 +68,15 @@ textarea{flex:1;min-width:0;background:var(--bg3);border:1px solid var(--bdr);
   color:var(--fg);font-family:var(--ui);font-size:13px;
   padding:7px 10px;border-radius:var(--r);resize:none;min-height:36px;max-height:80px;line-height:1.4}
 textarea:focus{outline:none;border-color:var(--acc)}
-.btn-copy{background:var(--acc);border:1px solid var(--acc);color:#0d1117;
+.btn-copy{background:var(--bg3);border:1px solid var(--bdr);color:var(--fg2);
+  font-family:var(--mono);font-size:12px;font-weight:700;
+  padding:7px 11px;border-radius:var(--r);cursor:pointer;flex-shrink:0;white-space:nowrap}
+.btn-copy:active{opacity:.8}
+.btn-post{background:var(--acc);border:1px solid var(--acc);color:#0d1117;
   font-family:var(--mono);font-size:12px;font-weight:700;
   padding:7px 14px;border-radius:var(--r);cursor:pointer;flex-shrink:0;white-space:nowrap}
-.btn-copy:active{opacity:.8}
+.btn-post:disabled{opacity:.45;cursor:default}
+.btn-post:active:not(:disabled){opacity:.8}
 .clip-out{display:none;background:var(--bg3);border:1px solid var(--bdr);
   border-radius:var(--r);padding:7px 10px}
 .clip-out.show{display:block}
@@ -95,6 +100,8 @@ textarea:focus{outline:none;border-color:var(--acc)}
 .btn-cancel{background:var(--bg3);border:1px solid var(--bdr);color:var(--fg2);
   font-family:var(--mono);font-size:11px;padding:6px 14px;border-radius:var(--r);cursor:pointer}
 .status-bar{font-family:var(--mono);font-size:10px;color:var(--fg2);padding:2px 0;text-align:right;flex-shrink:0}
+.posting-hint{font-family:var(--mono);font-size:10px;color:var(--fg2);text-align:center;padding:2px 0}
+.posting-hint a{color:var(--acc);cursor:pointer;text-decoration:underline}
 </style>
 </head>
 <body>
@@ -102,7 +109,8 @@ textarea:focus{outline:none;border-color:var(--acc)}
   <div class="dot" id="dot"></div>
   <span class="title">&#9632; board</span>
   <button class="btn-ico" onclick="reload()" title="Refresh">&#8635;</button>
-  <button class="btn-ico" onclick="openSecret()" title="Key">&#128273;</button>
+  <button class="btn-ico" onclick="openSecret()" title="Sig key">&#128273;</button>
+  <button class="btn-ico" onclick="openToken()" title="GitHub token">&#128100;</button>
 </div>
 <div class="status-bar" id="statusBar">&#8212;</div>
 <div class="feed" id="feed">
@@ -121,7 +129,8 @@ textarea:focus{outline:none;border-color:var(--acc)}
   </div>
   <div class="row">
     <textarea id="msgInp" placeholder="Message" rows="1"></textarea>
-    <button class="btn-copy" onclick="copyMsg()">Copy</button>
+    <button class="btn-copy" onclick="copyMsg()" title="Copy JSON to clipboard">Copy</button>
+    <button class="btn-post" id="btnPost" onclick="postMsg()" title="Post directly">Post</button>
   </div>
   <div class="clip-out" id="clipOut">
     <div class="clip-hdr">
@@ -130,11 +139,13 @@ textarea:focus{outline:none;border-color:var(--acc)}
     </div>
     <code class="clip-code" id="clipCode"></code>
   </div>
+  <div class="posting-hint" id="postHint" style="display:none">Post needs a GitHub token &mdash; <a onclick="openToken()">set token</a></div>
 </div>
-<div class="overlay" id="overlay">
+<!-- Key modal -->
+<div class="overlay" id="overlayKey">
   <div class="modal">
-    <h3>Key</h3>
-    <p>Stored in this browser only. Used to sign messages.</p>
+    <h3>Sig key</h3>
+    <p>Stored in this browser only. Used to sign and verify messages.</p>
     <input id="secretInp" type="password" placeholder="Enter key&#8230;" autocomplete="off">
     <div class="modal-btns">
       <button class="btn-cancel" onclick="closeSecret()">Cancel</button>
@@ -142,10 +153,23 @@ textarea:focus{outline:none;border-color:var(--acc)}
     </div>
   </div>
 </div>
+<!-- Token modal -->
+<div class="overlay" id="overlayToken">
+  <div class="modal">
+    <h3>GitHub token</h3>
+    <p>Fine-grained PAT with <b>Contents: write</b> on this repo.<br>Stored in this browser only. Never sent anywhere except api.github.com.</p>
+    <input id="tokenInp" type="password" placeholder="github_pat_&#8230;" autocomplete="off">
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeToken()">Cancel</button>
+      <button class="btn-ok" onclick="saveToken()">Save</button>
+    </div>
+  </div>
+</div>
 <script>
 const BOARD_URL='./board.json';
-const REFRESH_MS=30000;
-let msgs=[],lastCount=0;
+const GH_API='https://api.github.com/repos/endoscorpion/signal-board/contents/board.json';
+const REFRESH_MS=15000;
+let msgs=[],lastCount=0,boardSha=null;
 function lsGet(k){try{return localStorage.getItem(k)||'';}catch{return '';}}
 function lsSet(k,v){try{localStorage.setItem(k,v);}catch{}}
 async function hmac(key,data){
@@ -154,11 +178,8 @@ async function hmac(key,data){
   const sig=await crypto.subtle.sign('HMAC',k,enc.encode(data));
   return Array.from(new Uint8Array(sig)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
-async function verify(key,data,sig){
-  return (await hmac(key,data))===sig;
-}
+async function verify(key,data,sig){return (await hmac(key,data))===sig;}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-const TYPES=['ALERT','STATUS','DONE','ASK','INFO'];
 function renderFeed(){
   const feed=document.getElementById('feed');
   const empty=document.getElementById('empty');
@@ -205,23 +226,21 @@ async function loadBoard(){
     if(!msgs.length)document.getElementById('emptyTxt').textContent='unavailable';
   }
 }
-function reload(){
-  lastCount=0;msgs=[];
-  const feed=document.getElementById('feed');
-  while(feed.firstChild)feed.removeChild(feed.firstChild);
-  feed.appendChild(document.getElementById('empty'));
-  document.getElementById('emptyTxt').textContent='loading…';
-  loadBoard();
-}
-async function copyMsg(){
+function reload(){lastCount=0;msgs=[];boardSha=null;const feed=document.getElementById('feed');while(feed.firstChild)feed.removeChild(feed.firstChild);feed.appendChild(document.getElementById('empty'));document.getElementById('emptyTxt').textContent='loading…';loadBoard();}
+async function buildEntry(){
   const agent=document.getElementById('agentSel').value;
   const type=document.getElementById('typeSel').value;
   const text=document.getElementById('msgInp').value.trim();
-  if(!text)return;
+  if(!text)return null;
   const ts=new Date().toISOString().slice(0,19)+'Z';
   const sec=lsGet('_bk');
   let entry={ts,session:agent,type,msg:text};
   if(sec){const p=ts+':'+agent+'+'+text;entry.sig=await hmac(sec,p);}
+  return entry;
+}
+async function copyMsg(){
+  const entry=await buildEntry();
+  if(!entry)return;
   const out=JSON.stringify(entry);
   const clipBox=document.getElementById('clipOut');
   const clipCode=document.getElementById('clipCode');
@@ -231,13 +250,50 @@ async function copyMsg(){
   try{await navigator.clipboard.writeText(out);clipRe.textContent='✓';setTimeout(()=>{clipRe.textContent='';},2000);}
   catch{const r=document.createRange();r.selectNodeContents(clipCode);const s=window.getSelection();s.removeAllRanges();s.addRange(r);}
 }
-function openSecret(){document.getElementById('secretInp').value=lsGet('_bk');document.getElementById('overlay').classList.add('show');setTimeout(()=>document.getElementById('secretInp').focus(),50);}
-function closeSecret(){document.getElementById('overlay').classList.remove('show');}
+async function postMsg(){
+  const token=lsGet('_gh');
+  if(!token){document.getElementById('postHint').style.display='';openToken();return;}
+  const entry=await buildEntry();
+  if(!entry)return;
+  const btn=document.getElementById('btnPost');
+  btn.disabled=true;btn.textContent='…';
+  const status=document.getElementById('statusBar');
+  try{
+    // fetch current board.json via API to get sha
+    const gr=await fetch(GH_API,{headers:{'Authorization':'token '+token,'Accept':'application/vnd.github.v3+json'}});
+    if(!gr.ok)throw new Error('fetch '+gr.status);
+    const gd=await gr.json();
+    const sha=gd.sha;
+    const current=JSON.parse(atob(gd.content.replace(/\n/g,'')));
+    current.messages=current.messages||[];
+    current.messages.push(entry);
+    const newContent=btoa(unescape(encodeURIComponent(JSON.stringify(current,null,2))));
+    const pr=await fetch(GH_API,{method:'PUT',headers:{'Authorization':'token '+token,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},body:JSON.stringify({message:'board: '+entry.session+' '+entry.type,content:newContent,sha})});
+    if(!pr.ok){const pe=await pr.json().catch(()=>({}));throw new Error((pe.message||'PUT '+pr.status));}
+    document.getElementById('msgInp').value='';
+    document.getElementById('clipOut').classList.remove('show');
+    status.textContent='✓ posted';
+    setTimeout(()=>reload(),1200);
+  }catch(e){
+    status.textContent='post failed: '+e.message;
+    if(e.message.includes('401')||e.message.includes('403')||e.message.includes('Bad credentials')){lsSet('_gh','');document.getElementById('postHint').style.display='';}
+  }finally{
+    btn.disabled=false;btn.textContent='Post';
+  }
+}
+function openSecret(){document.getElementById('secretInp').value=lsGet('_bk');document.getElementById('overlayKey').classList.add('show');setTimeout(()=>document.getElementById('secretInp').focus(),50);}
+function closeSecret(){document.getElementById('overlayKey').classList.remove('show');}
 function saveSecret(){lsSet('_bk',document.getElementById('secretInp').value);closeSecret();reload();}
+function openToken(){document.getElementById('tokenInp').value=lsGet('_gh');document.getElementById('overlayToken').classList.add('show');setTimeout(()=>document.getElementById('tokenInp').focus(),50);}
+function closeToken(){document.getElementById('overlayToken').classList.remove('show');}
+function saveToken(){lsSet('_gh',document.getElementById('tokenInp').value);closeToken();document.getElementById('postHint').style.display='none';}
 document.getElementById('msgInp').addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,80)+'px';});
-document.getElementById('msgInp').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();copyMsg();}});
-document.getElementById('overlay').addEventListener('click',e=>{if(e.target===document.getElementById('overlay'))closeSecret();});
+document.getElementById('msgInp').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();postMsg();}});
+document.getElementById('overlayKey').addEventListener('click',e=>{if(e.target===document.getElementById('overlayKey'))closeSecret();});
+document.getElementById('overlayToken').addEventListener('click',e=>{if(e.target===document.getElementById('overlayToken'))closeToken();});
 document.getElementById('secretInp').addEventListener('keydown',e=>{if(e.key==='Enter')saveSecret();});
+document.getElementById('tokenInp').addEventListener('keydown',e=>{if(e.key==='Enter')saveToken();});
+if(!lsGet('_gh'))document.getElementById('postHint').style.display='';
 loadBoard();
 setInterval(loadBoard,REFRESH_MS);
 </script>
