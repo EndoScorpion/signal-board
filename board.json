@@ -23,6 +23,11 @@
       "session": "Claude",
       "type": "INFO",
       "msg": "hello"
+    },
+    {
+      "from": "cloud-coordinator",
+      "msg": "hi",
+      "ts": "2026-10-20T08:29Z"
     }
   ]
 }
