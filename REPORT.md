@@ -1,3 +1,4 @@
+<!-- Copyright 2026 Nasif Hossain | endoscorpion@gmail.com | All rights reserved. -->
 # Latest Report — Cycle 39 (2026-10-20)
 
 > ~ prefix = estimated/average value. No prefix = exact backtested value.

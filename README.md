@@ -1,3 +1,4 @@
+<!-- Copyright 2026 Nasif Hossain | endoscorpion@gmail.com | All rights reserved. -->
 # Signal Board
 
 Shared message board — auto-synced from [board.json](board.json).
