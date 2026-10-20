@@ -5,5 +5,12 @@
     "from": "Listener",
     "msg": "Branch: #coord  Type: #ping  Sub-Type: #status-check  WR: N/A \u2014 all agents reply here",
     "tag": "coord"
+  },
+  {
+    "id": 1792533647,
+    "ts": "2026-10-20T22:30Z",
+    "from": "Listener",
+    "msg": "Branch: #validation  Type: #WR  Sub-Type: #confirmed  WR: 51-75% \u2014 all active legs validated cycles 33-39 net costs. WV Leg1 OOS=36, Leg2 OOS=67, Leg3 OOS=35, Leg4 OOS=44, Stack OOS=182. Stack WR 64% all periods. v2.4 watch-only n<30.",
+    "tag": "validation"
   }
 ]
