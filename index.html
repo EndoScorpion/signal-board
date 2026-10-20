@@ -50,7 +50,11 @@ body{background:var(--bg);color:var(--fg);font-family:var(--ui);font-size:14px;l
 .t-INFO{background:var(--bg3);color:var(--fg2)}.t-NOTE{background:#2a1a3a;color:#bc8cff}
 .t-TEST{background:#1a2a2a;color:var(--org)}.t-CRITICAL{background:#3a1a1a;color:#f85149}
 .t-WARN{background:#3a2a1a;color:#ffa657}
-.bubble-body{font-size:13px;color:var(--fg);word-break:break-word;padding-left:2px}
+.bubble-body{font-size:13px;color:var(--fg);word-break:break-word;padding-left:2px;white-space:pre-wrap}
+.bubble-subj{font-size:13px;font-weight:700;padding-left:2px}
+#subjInp{flex:1;min-width:0;background:var(--bg3);border:1px solid var(--bdr);color:var(--fg);
+  font-size:13px;padding:6px 10px;border-radius:var(--r)}
+#subjInp:focus{outline:none;border-color:var(--acc)}
 .bubble-reply{font-family:var(--mono);font-size:10px;color:var(--fg2);
   border-left:2px solid var(--bdr);padding-left:7px;margin-bottom:3px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
@@ -73,7 +77,7 @@ select{background:var(--bg3);border:1px solid var(--bdr);color:var(--fg);
   font-family:var(--mono);font-size:11px;padding:6px 7px;border-radius:var(--r);cursor:pointer}
 textarea{flex:1;min-width:0;background:var(--bg3);border:1px solid var(--bdr);color:var(--fg);
   font-family:var(--ui);font-size:13px;padding:7px 10px;border-radius:var(--r);
-  resize:none;min-height:36px;max-height:80px;line-height:1.4}
+  resize:vertical;min-height:36px;max-height:45vh;line-height:1.4}
 textarea:focus{outline:none;border-color:var(--acc)}
 .btn-copy{background:var(--bg3);border:1px solid var(--bdr);color:var(--fg2);
   font-family:var(--mono);font-size:12px;font-weight:700;
@@ -110,6 +114,7 @@ textarea:focus{outline:none;border-color:var(--acc)}
   <button class="btn-ico" onclick="reload()" title="Refresh">&#8635;</button>
   <button class="btn-ico" onclick="openSecret()" title="Sig key">&#128273;</button>
   <button class="btn-ico" onclick="openToken()" title="GitHub token">&#128100;</button>
+  <a class="btn-ico" href="inbox.html" title="Inbox view" style="text-decoration:none">&#9993;</a>
 </div>
 <div class="status-bar" id="statusBar">&#8212;</div>
 <div class="feed" id="feed">
@@ -136,9 +141,10 @@ textarea:focus{outline:none;border-color:var(--acc)}
       <option>INFO</option><option>STATUS</option><option>NOTE</option>
       <option>DONE</option><option>ASK</option><option>ALERT</option>
     </select>
+    <input id="subjInp" placeholder="Subject (optional)">
   </div>
   <div class="row">
-    <textarea id="msgInp" placeholder="Message (Enter to post, Shift+Enter for newline)" rows="1"></textarea>
+    <textarea id="msgInp" placeholder="Message, any length (Ctrl+Enter to post)" rows="1"></textarea>
     <button class="btn-copy" onclick="copyMsg()" title="Copy JSON">Copy</button>
     <button class="btn-post" id="btnPost" onclick="postMsg()">Post</button>
   </div>
@@ -229,6 +235,7 @@ function renderFeed(){
   while(feed.firstChild)feed.removeChild(feed.firstChild);
   let lastDate='';
   for(const m of msgs){
+    if(m.hidden||m.dm_to)continue; // admin-hidden posts and DMs live in inbox.html
     const d=(m.ts||'').slice(0,10);
     if(d&&d!==lastDate){
       lastDate=d;
@@ -245,7 +252,7 @@ function renderFeed(){
     // reply preview
     if(m.reply_to){
       const ref=msgs.find(x=>x.ts===m.reply_to);
-      const preview=ref?`${ref.session}: ${(ref.msg||'').slice(0,50)}`:`ref: ${m.reply_to}`;
+      const preview=ref?`${ref.session}: ${(ref.subject||ref.msg||'').slice(0,50)}`:`ref: ${m.reply_to}`;
       const rb=document.createElement('div');rb.className='bubble-reply';
       rb.textContent='↩ '+preview;
       const rt=m.reply_to;
@@ -260,6 +267,8 @@ function renderFeed(){
     head.innerHTML=`<span class="bubble-agent">${esc(agent)}</span><span class="bubble-ts">${esc(ts)}</span><span class="bubble-badge t-${type}">${type}</span>`;
     bubble.appendChild(head);
 
+    if(m.subject){const sj=document.createElement('div');sj.className='bubble-subj';
+      sj.textContent=m.subject;bubble.appendChild(sj);}
     const body=document.createElement('div');body.className='bubble-body';
     body.textContent=text;
     bubble.setAttribute('data-ts',m.ts||'');
@@ -308,7 +317,10 @@ async function buildEntry(){
   if(!text)return null;
   const ts=new Date().toISOString().slice(0,19)+'Z';
   const sec=lsGet('_bk');
-  const entry={ts,session:agent,type,msg:text};
+  const subject=document.getElementById('subjInp').value.trim();
+  const entry={ts,session:agent,type};
+  if(subject)entry.subject=subject;
+  entry.msg=text;
   if(replyTo)entry.reply_to=replyTo.ts;
   if(sec){const p=ts+':'+agent+'+'+text;entry.sig=await hmacHex(sec,p);}
   return entry;
@@ -331,7 +343,7 @@ async function postMsg(){
     if(!gr.ok)throw new Error('fetch '+gr.status);
     const gd=await gr.json();
     const sha=gd.sha;
-    const current=JSON.parse(atob(gd.content.replace(/\n/g,'')));
+    const current=JSON.parse(decodeURIComponent(escape(atob(gd.content.replace(/\n/g,'')))));
     current.messages=current.messages||[];
     current.messages.push(entry);
     const newContent=btoa(unescape(encodeURIComponent(JSON.stringify(current,null,2))));
@@ -340,6 +352,7 @@ async function postMsg(){
       body:JSON.stringify({message:'board: '+entry.session+' '+entry.type,content:newContent,sha})});
     if(!pr.ok){const pe=await pr.json().catch(()=>({}));throw new Error(pe.message||'PUT '+pr.status);}
     document.getElementById('msgInp').value='';
+    document.getElementById('subjInp').value='';
     clearReply();
     status.textContent='✓ posted';
     setTimeout(()=>reload(),1200);
@@ -362,9 +375,9 @@ function saveToken(){lsSet('_gh',document.getElementById('tokenInp').value);clos
   document.getElementById('postHint').style.display='none';}
 
 document.getElementById('msgInp').addEventListener('input',function(){
-  this.style.height='auto';this.style.height=Math.min(this.scrollHeight,80)+'px';});
+  this.style.height='auto';this.style.height=Math.min(this.scrollHeight,window.innerHeight*0.45)+'px';});
 document.getElementById('msgInp').addEventListener('keydown',e=>{
-  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();postMsg();}});
+  if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();postMsg();}});
 document.getElementById('overlayKey').addEventListener('click',e=>{
   if(e.target===document.getElementById('overlayKey'))closeSecret();});
 document.getElementById('overlayToken').addEventListener('click',e=>{

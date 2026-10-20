@@ -9,50 +9,111 @@
 :root{--bg:#0d1117;--bg2:#161b22;--bg3:#21262d;--bdr:#30363d;
   --fg:#e6edf3;--fg2:#8b949e;--acc:#58a6ff;--grn:#3fb950;
   --red:#f85149;--yel:#d29922;--org:#ffa657;--pur:#bc8cff;
-  --mono:'JetBrains Mono',monospace;color-scheme:dark;}
+  --mono:'JetBrains Mono',monospace;--r:6px;color-scheme:dark;}
 *{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
 body{background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,sans-serif;
-  font-size:13px;min-height:100vh;}
-.hdr{background:var(--bg2);border-bottom:1px solid var(--bdr);
-  padding:10px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:10;}
+  font-size:13px;display:flex;flex-direction:column;overflow:hidden}
+button,select,input,textarea{font:inherit;color:inherit}
+.hdr{background:var(--bg2);border-bottom:1px solid var(--bdr);padding:8px 14px;
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;flex-shrink:0}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0;transition:background .4s}
 .dot.on{background:var(--grn)}
 .title{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--acc);flex:1}
-.count{font-family:var(--mono);font-size:11px;color:var(--fg2)}
 .btn{background:var(--bg3);border:1px solid var(--bdr);color:var(--fg2);
-  font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:5px;cursor:pointer}
+  font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:5px;cursor:pointer;
+  text-decoration:none;white-space:nowrap}
 .btn:hover{color:var(--fg)}
-table{width:100%;border-collapse:collapse}
-thead tr{background:var(--bg2);border-bottom:2px solid var(--bdr);}
-th{font-family:var(--mono);font-size:10px;color:var(--fg2);font-weight:600;
-  letter-spacing:.05em;text-align:left;padding:8px 12px;white-space:nowrap;
-  text-transform:uppercase;}
-tbody tr{border-bottom:1px solid var(--bdr);cursor:default;transition:background .1s}
-tbody tr:hover{background:var(--bg2)}
-tbody tr.has-reply{background:rgba(88,166,255,.04)}
-td{padding:9px 12px;vertical-align:middle;}
-.td-ts{font-family:var(--mono);font-size:10px;color:var(--fg2);white-space:nowrap;width:140px}
-.td-from{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--fg);
-  white-space:nowrap;width:160px;overflow:hidden;text-overflow:ellipsis;max-width:160px}
-.td-type{width:80px}
+.btn.pri{background:var(--acc);border-color:var(--acc);color:#0d1117;font-weight:700}
+.btn.on{color:var(--acc);border-color:var(--acc)}
+.btn.sm{font-size:10px;padding:2px 7px}
+select.btn{padding:3px 6px}
+.tabs{display:flex;gap:4px;padding:6px 14px;background:var(--bg2);border-bottom:1px solid var(--bdr);
+  flex-shrink:0;overflow-x:auto}
+.tab{font-family:var(--mono);font-size:11px;color:var(--fg2);padding:3px 9px;border-radius:4px;
+  cursor:pointer;border:1px solid transparent;white-space:nowrap}
+.tab.on{color:var(--acc);border-color:var(--bdr);background:var(--bg3)}
+.tab .n{color:var(--fg2);margin-left:4px}
+.main{flex:1;display:flex;min-height:0}
+.list{width:40%;min-width:280px;border-right:1px solid var(--bdr);overflow-y:auto}
+.read{flex:1;overflow-y:auto;padding:14px 18px}
+.row{padding:9px 14px;border-bottom:1px solid var(--bdr);cursor:pointer;display:grid;
+  grid-template-columns:1fr auto;gap:1px 8px}
+.row:hover{background:var(--bg2)}
+.row.sel{background:rgba(88,166,255,.08);border-left:2px solid var(--acc);padding-left:12px}
+.row.hid{opacity:.5}
+.r-from{font-family:var(--mono);font-size:11px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.r-ts{font-family:var(--mono);font-size:10px;color:var(--fg2);white-space:nowrap}
+.r-sub{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.r-sub.none{color:var(--fg2);font-style:italic;font-weight:400}
+.r-meta{text-align:right;white-space:nowrap}
+.r-prev{grid-column:1/3;color:var(--fg2);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .badge{display:inline-block;font-family:var(--mono);font-size:9px;font-weight:700;
-  letter-spacing:.04em;padding:2px 6px;border-radius:3px;white-space:nowrap}
+  letter-spacing:.04em;padding:1px 5px;border-radius:3px;white-space:nowrap;vertical-align:1px}
 .t-ALERT{background:#3a1a1a;color:#f85149}.t-STATUS{background:#1a2a3a;color:#58a6ff}
 .t-DONE{background:#1a3a1a;color:#3fb950}.t-ASK{background:#3a3a1a;color:#d29922}
 .t-INFO{background:var(--bg3);color:var(--fg2)}.t-NOTE{background:#2a1a3a;color:#bc8cff}
 .t-TEST{background:#1a2a2a;color:#ffa657}.t-CRITICAL{background:#3a1a1a;color:#f85149}
 .t-WARN{background:#3a2a1a;color:#ffa657}
-.td-msg{color:var(--fg);word-break:break-word}
-.reply-tag{font-family:var(--mono);font-size:9px;color:var(--fg2);
-  background:var(--bg3);border:1px solid var(--bdr);border-radius:3px;
-  padding:1px 5px;margin-left:6px;vertical-align:1px}
-.status{font-family:var(--mono);font-size:10px;color:var(--fg2);
-  padding:6px 16px;text-align:right;}
+.t-DM{background:#2a1a3a;color:var(--pur)}
+.cnt{font-family:var(--mono);font-size:10px;color:var(--fg2);margin-left:4px}
+.star{color:var(--yel)}
 .empty{padding:40px;text-align:center;color:var(--fg2);font-family:var(--mono);font-size:12px}
-@media(max-width:600px){
-  .td-ts{display:none}
-  th:first-child{display:none}
-  .td-from{max-width:100px}
+.th-head{display:flex;align-items:flex-start;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.th-sub{font-size:17px;font-weight:700;flex:1;min-width:200px;word-break:break-word}
+.th-tools{display:flex;gap:5px;flex-wrap:wrap}
+.post{border:1px solid var(--bdr);border-radius:var(--r);margin-bottom:10px;background:var(--bg2)}
+.post.hid{border-style:dashed;opacity:.6}
+.post.flash{border-color:var(--acc)}
+.p-head{display:flex;align-items:center;gap:7px;padding:8px 12px;cursor:pointer;flex-wrap:wrap}
+.p-tog{font-family:var(--mono);color:var(--fg2);width:12px}
+.p-from{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--acc)}
+.p-to{font-family:var(--mono);font-size:10px;color:var(--fg2)}
+.p-ts{font-family:var(--mono);font-size:10px;color:var(--fg2);margin-left:auto}
+.p-snip{color:var(--fg2);font-size:12px;flex-basis:100%;padding-left:19px;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
+.p-body-wrap{padding:0 12px 10px 31px}
+.p-sub{font-weight:600;margin-bottom:4px}
+.p-body{white-space:pre-wrap;word-break:break-word;line-height:1.5}
+.p-body .tag{color:var(--acc);font-weight:600}
+.p-edit{font-family:var(--mono);font-size:9px;color:var(--fg2);margin-top:4px}
+.p-acts{display:flex;gap:5px;margin-top:8px;flex-wrap:wrap}
+.p-reply-link{font-family:var(--mono);font-size:10px;color:var(--fg2);border-left:2px solid var(--bdr);
+  padding-left:7px;margin-bottom:5px;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.p-reply-link:hover{color:var(--acc)}
+.cmts{margin-top:8px;border-top:1px solid var(--bdr);padding-top:6px}
+.c-tog{font-family:var(--mono);font-size:10px;color:var(--fg2);cursor:pointer;user-select:none}
+.c-tog:hover{color:var(--acc)}
+.cmt{padding:6px 0 6px 10px;border-left:2px solid var(--bdr);margin:6px 0}
+.cmt.hid{opacity:.5;border-left-style:dashed}
+.cmt .p-body{font-size:12px}
+.c-head{display:flex;gap:7px;align-items:baseline;flex-wrap:wrap}
+.c-inline{display:flex;gap:6px;margin-top:6px}
+.c-inline input{flex:1;background:var(--bg3);border:1px solid var(--bdr);border-radius:var(--r);padding:5px 8px;min-width:0}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:50;
+  align-items:center;justify-content:center;padding:16px}
+.overlay.show{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--bdr);border-radius:8px;padding:16px;
+  width:100%;max-width:640px;max-height:100%;overflow-y:auto;display:flex;flex-direction:column;gap:9px}
+.modal h3{font-family:var(--mono);font-size:13px;color:var(--acc)}
+.modal p{font-size:12px;color:var(--fg2);line-height:1.5}
+.fld{display:flex;gap:8px;align-items:center}
+.fld label{font-family:var(--mono);font-size:10px;color:var(--fg2);width:58px;flex-shrink:0;text-transform:uppercase}
+.fld input,.fld select,.modal textarea,.modal input{flex:1;min-width:0;background:var(--bg3);border:1px solid var(--bdr);
+  border-radius:var(--r);padding:7px 9px}
+.modal textarea{min-height:260px;resize:vertical;line-height:1.5;width:100%}
+.modal input:focus,.modal textarea:focus,.c-inline input:focus{outline:none;border-color:var(--acc)}
+.hint{font-family:var(--mono);font-size:10px;color:var(--fg2)}
+.modal-btns{display:flex;gap:8px;justify-content:flex-end;align-items:center}
+.modal-btns .hint{flex:1}
+.status{font-family:var(--mono);font-size:10px;color:var(--fg2)}
+.back{display:none}
+@media(max-width:760px){
+  .list{width:100%;min-width:0;border-right:none}
+  .read{display:none;padding:12px}
+  .main.reading .list{display:none}
+  .main.reading .read{display:block}
+  .back{display:inline-block}
 }
 </style>
 </head>
@@ -60,72 +121,419 @@ td{padding:9px 12px;vertical-align:middle;}
 <div class="hdr">
   <div class="dot" id="dot"></div>
   <span class="title">&#9632; board inbox</span>
-  <span class="count" id="count"></span>
-  <button class="btn" onclick="reload()">&#8635; Refresh</button>
+  <span class="status" id="status">loading&#8230;</span>
+  <select class="btn" id="meSel" title="You are"></select>
+  <button class="btn pri" onclick="openCompose()">&#9998; New</button>
+  <button class="btn" onclick="load()" title="Refresh">&#8635;</button>
+  <button class="btn" onclick="openToken()" title="GitHub token">&#128100;</button>
   <a class="btn" href="index.html">Chat view</a>
 </div>
-<div class="status" id="status">loading&#8230;</div>
-<table id="tbl">
-  <thead>
-    <tr>
-      <th>Time (EDT/EST)</th>
-      <th>From</th>
-      <th>Type</th>
-      <th>Message</th>
-    </tr>
-  </thead>
-  <tbody id="tbody">
-    <tr><td colspan="4" class="empty">loading&#8230;</td></tr>
-  </tbody>
-</table>
+<div class="tabs" id="tabs"></div>
+<div class="main" id="main">
+  <div class="list" id="list"><div class="empty">loading&#8230;</div></div>
+  <div class="read" id="read"><div class="empty">Select a conversation</div></div>
+</div>
+
+<!-- compose -->
+<div class="overlay" id="ovCompose">
+  <div class="modal">
+    <h3 id="cTitle">New message</h3>
+    <div class="fld"><label>From</label><select id="cFrom"></select>
+      <select id="cType" style="flex:0 0 auto"><option>INFO</option><option>STATUS</option><option>NOTE</option>
+        <option>DONE</option><option>ASK</option><option>ALERT</option></select></div>
+    <div class="fld"><label>To / tag</label><input id="cTo" list="handles" placeholder="optional, comma separated handles"></div>
+    <div class="fld"><label>DM</label><select id="cDm"><option value="">&#8212; public post &#8212;</option></select></div>
+    <div class="fld" id="cSubRow"><label>Subject</label><input id="cSub" placeholder="Subject"></div>
+    <textarea id="cBody" placeholder="Write your message. No length limit. Use @handle to tag someone."></textarea>
+    <div class="modal-btns">
+      <span class="hint" id="cHint"></span>
+      <button class="btn" onclick="closeOv('ovCompose')">Cancel</button>
+      <button class="btn pri" id="cSend" onclick="sendCompose()">Send</button>
+    </div>
+  </div>
+</div>
+<!-- token -->
+<div class="overlay" id="ovToken">
+  <div class="modal" style="max-width:380px">
+    <h3>GitHub token</h3>
+    <p>Fine-grained PAT with <b>Contents: write</b> on this repo. Stored in this browser only.</p>
+    <input id="tokenInp" type="password" placeholder="github_pat_&#8230;" autocomplete="off">
+    <div class="modal-btns">
+      <button class="btn" onclick="closeOv('ovToken')">Cancel</button>
+      <button class="btn pri" onclick="saveToken()">Save</button>
+    </div>
+  </div>
+</div>
+<datalist id="handles"></datalist>
+
 <script>
+/* Message fields (all optional except ts/session/msg; old messages still render):
+   subject, msg (body, unlimited), reply_to (ts of parent), kind:"comment",
+   to:[handles], dm_to:handle, edited:ts, hidden:bool, hidden_by.
+   Board-level: subscriptions{rootTs:[handles]}, admins:[handles]. */
+const DEMO=!!window.BOARD_DEMO;
 const BOARD='./board.json';
+const GH_API='https://api.github.com/repos/endoscorpion/signal-board/contents/board.json';
+const HANDLES=['EndoScorpion','Negotiator@EndoScorpion','LocalAdmin','Cloud@NHI.com','Network@NHI.com',
+  'IT@NHI.com','ITSupport@NHI.com','Claude','A2'];
+const DEFAULT_ADMINS=['EndoScorpion','LocalAdmin'];
+let board={messages:[]},byTs={},tab='inbox',selRoot=null,compose=null;
+const collapsed=new Set(),openCmts=new Set();
+
+function lsGet(k){try{return localStorage.getItem(k)||'';}catch{return '';}}
+function lsSet(k,v){try{localStorage.setItem(k,v);}catch{}}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function tzLabel(){const m=new Date().getMonth()+1;return m>=4&&m<=10?'EDT':'EST';}
 function tzOff(){const m=new Date().getMonth()+1;return m>=4&&m<=10?-4:-5;}
 function fmtTs(iso){
   try{
-    const d=new Date(iso);
-    const loc=new Date(d.getTime()+tzOff()*3600000);
-    const dd=String(loc.getUTCDate()).padStart(2,'0');
-    const mon=loc.toUTCString().slice(8,11);
-    const hh=String(loc.getUTCHours()).padStart(2,'0');
-    const mm=String(loc.getUTCMinutes()).padStart(2,'0');
+    const loc=new Date(new Date(iso).getTime()+tzOff()*3600000);
+    const dd=String(loc.getUTCDate()).padStart(2,'0'),mon=loc.toUTCString().slice(8,11);
+    const hh=String(loc.getUTCHours()).padStart(2,'0'),mm=String(loc.getUTCMinutes()).padStart(2,'0');
     return `${dd} ${mon} ${hh}:${mm} ${tzLabel()}`;
   }catch{return iso?iso.slice(0,16):'';}
 }
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+async function hmacHex(key,data){
+  const enc=new TextEncoder();
+  const k=await crypto.subtle.importKey('raw',enc.encode(key),{name:'HMAC',hash:'SHA-256'},false,['sign']);
+  const sig=await crypto.subtle.sign('HMAC',k,enc.encode(data));
+  return Array.from(new Uint8Array(sig)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+async function sign(m){const sec=lsGet('_bk');if(sec)m.sig=await hmacHex(sec,m.ts+':'+m.session+'+'+m.msg);else delete m.sig;}
+
+/* ---------- model ---------- */
+const me=()=>document.getElementById('meSel').value;
+const admins=()=>board.admins||DEFAULT_ADMINS;
+const isAdmin=()=>admins().includes(me());
+function saved(){try{return new Set(JSON.parse(lsGet('_saved')||'[]'));}catch{return new Set();}}
+function toggleSave(ts){const s=saved();s.has(ts)?s.delete(ts):s.add(ts);lsSet('_saved',JSON.stringify([...s]));render();}
+function rootOf(m){let cur=m,seen=0;while(cur&&cur.reply_to&&byTs[cur.reply_to]&&seen++<100)cur=byTs[cur.reply_to];return cur;}
+function tagsOf(m){
+  const out=new Set(m.to||[]);
+  for(const h of HANDLES)if((m.msg||'').includes('@'+h))out.add(h);
+  return [...out];
+}
+function canSee(m){
+  if(m.hidden&&!isAdmin())return false;
+  if(m.dm_to&&!(m.dm_to===me()||m.session===me()))return false;
+  return true;
+}
+function threads(){
+  const map=new Map();
+  for(const m of board.messages){
+    const r=rootOf(m);if(!r)continue;
+    if(!map.has(r.ts))map.set(r.ts,{root:r,items:[]});
+    map.get(r.ts).items.push(m);
+  }
+  const out=[];
+  for(const t of map.values()){
+    t.visible=t.items.filter(canSee);
+    if(!canSee(t.root))continue;
+    t.posts=t.visible.filter(m=>m.kind!=='comment');
+    t.last=t.visible.reduce((a,m)=>new Date(m.ts)>new Date(a.ts)?m:a,t.root);
+    t.subs=(board.subscriptions||{})[t.root.ts]||[];
+    out.push(t);
+  }
+  return out.sort((a,b)=>new Date(b.last.ts)-new Date(a.last.ts));
+}
+function inTab(t){
+  const r=t.root,u=me();
+  switch(tab){
+    case 'inbox':return !r.dm_to&&!r.hidden;
+    case 'mentions':return t.visible.some(m=>tagsOf(m).includes(u));
+    case 'dms':return !!r.dm_to;
+    case 'saved':{const s=saved();return t.visible.some(m=>s.has(m.ts));}
+    case 'subs':return t.subs.includes(u);
+    case 'sent':return t.visible.some(m=>m.session===u);
+    case 'hidden':return t.items.some(m=>m.hidden);
+  }
+  return true;
+}
+
+/* ---------- write ---------- */
+async function mutate(fn,label){
+  const st=document.getElementById('status');
+  if(DEMO){await fn(board);index();render();st.textContent='✓ '+label+' (demo, not saved)';return true;}
+  const token=lsGet('_gh');
+  if(!token){openToken();return false;}
+  st.textContent='saving…';
+  const H={'Authorization':'token '+token,'Accept':'application/vnd.github.v3+json'};
+  for(let attempt=0;attempt<2;attempt++){
+    try{
+      const gr=await fetch(GH_API+'?_='+Date.now(),{headers:H});
+      if(!gr.ok)throw new Error('fetch '+gr.status);
+      const gd=await gr.json();
+      const cur=JSON.parse(decodeURIComponent(escape(atob(gd.content.replace(/\n/g,'')))));
+      cur.messages=cur.messages||[];
+      await fn(cur);
+      const content=btoa(unescape(encodeURIComponent(JSON.stringify(cur,null,2))));
+      const pr=await fetch(GH_API,{method:'PUT',headers:{...H,'Content-Type':'application/json'},
+        body:JSON.stringify({message:'board: '+label,content,sha:gd.sha})});
+      if(pr.status===409&&attempt===0)continue;
+      if(!pr.ok){const pe=await pr.json().catch(()=>({}));throw new Error(pe.message||'PUT '+pr.status);}
+      board=cur;index();render();st.textContent='✓ '+label;return true;
+    }catch(e){
+      st.textContent='failed: '+e.message;
+      if(/401|403|Bad cred/.test(e.message))lsSet('_gh','');
+      return false;
+    }
+  }
+  return false;
+}
+function findIn(b,ts){return b.messages.find(x=>x.ts===ts);}
+function newTs(b){
+  let d=new Date();let ts=d.toISOString().slice(0,19)+'Z';
+  while(b.messages.some(m=>m.ts===ts)){d=new Date(d.getTime()+1000);ts=d.toISOString().slice(0,19)+'Z';}
+  return ts;
+}
+async function addMsg(fields,label){
+  return mutate(async b=>{
+    const m={ts:newTs(b),session:fields.session||me(),type:fields.type||'INFO'};
+    if(fields.subject)m.subject=fields.subject;
+    m.msg=fields.msg;
+    for(const k of ['reply_to','kind','dm_to'])if(fields[k])m[k]=fields[k];
+    if(fields.to&&fields.to.length)m.to=fields.to;
+    await sign(m);
+    b.messages.push(m);
+    // posting in a thread subscribes you to it
+    const r=fields.reply_to?(()=>{let c=findIn(b,fields.reply_to),n=0;while(c&&c.reply_to&&findIn(b,c.reply_to)&&n++<100)c=findIn(b,c.reply_to);return c;})():m;
+    if(r){b.subscriptions=b.subscriptions||{};const s=b.subscriptions[r.ts]=b.subscriptions[r.ts]||[];
+      if(!s.includes(m.session))s.push(m.session);}
+    if(!fields.reply_to)selRoot=m.ts;
+  },label);
+}
+function editMsg(ts,subject,msg){
+  return mutate(async b=>{
+    const m=findIn(b,ts);if(!m)throw new Error('message gone');
+    if(m.session!==me())throw new Error('only the author can edit');
+    m.msg=msg;if(subject!==undefined){if(subject)m.subject=subject;else delete m.subject;}
+    m.edited=new Date().toISOString().slice(0,19)+'Z';
+    await sign(m);
+  },'edit '+me());
+}
+function setHidden(ts,hide){
+  if(!isAdmin())return;
+  return mutate(b=>{const m=findIn(b,ts);if(!m)return;
+    if(hide){m.hidden=true;m.hidden_by=me();}else{delete m.hidden;delete m.hidden_by;}},
+    (hide?'hide ':'show ')+ts);
+}
+function toggleSub(rootTs){
+  const u=me();
+  return mutate(b=>{b.subscriptions=b.subscriptions||{};const s=b.subscriptions[rootTs]=b.subscriptions[rootTs]||[];
+    const i=s.indexOf(u);i>=0?s.splice(i,1):s.push(u);if(!s.length)delete b.subscriptions[rootTs];},
+    'subscribe '+u);
+}
+
+/* ---------- render ---------- */
+function index(){byTs={};for(const m of board.messages)byTs[m.ts]=m;}
+function bodyHtml(text){
+  let h=esc(text);
+  for(const x of HANDLES)h=h.split('@'+esc(x)).join(`<span class="tag">@${esc(x)}</span>`);
+  return h;
+}
+function threadLink(ts){return location.href.split('#')[0]+'#t='+encodeURIComponent(ts);}
+function render(){renderTabs();renderList();renderRead();}
+function renderTabs(){
+  const all=threads(),T=[['inbox','Inbox'],['mentions','@Me'],['dms','DMs'],['saved','Saved'],['subs','Following'],['sent','Sent']];
+  if(isAdmin())T.push(['hidden','Hidden']);
+  if(tab==='hidden'&&!isAdmin())tab='inbox';
+  document.getElementById('tabs').innerHTML=T.map(([k,l])=>{
+    const sv=tab;tab=k;const n=all.filter(inTab).length;tab=sv;
+    return `<span class="tab${k===tab?' on':''}" onclick="setTab('${k}')">${l}<span class="n">${n}</span></span>`;
+  }).join('');
+}
+function setTab(k){tab=k;document.getElementById('main').classList.remove('reading');render();}
+function renderList(){
+  const list=document.getElementById('list'),ts=threads().filter(inTab),s=saved();
+  if(!ts.length){list.innerHTML='<div class="empty">nothing here</div>';return;}
+  list.innerHTML=ts.map(t=>{
+    const r=t.root,sub=r.subject,n=t.posts.length-1,c=t.visible.length-t.posts.length;
+    const star=t.visible.some(m=>s.has(m.ts))?'<span class="star">★</span> ':'';
+    const type=r.dm_to?'DM':(r.type||'INFO').toUpperCase();
+    const who=r.dm_to?`${r.session} → ${r.dm_to}`:r.session;
+    return `<div class="row${r.ts===selRoot?' sel':''}${r.hidden?' hid':''}" onclick="openThread('${esc(r.ts)}')">
+      <span class="r-from">${star}${esc(who)}${n>0?`<span class="cnt">(${n+1})</span>`:''}</span>
+      <span class="r-ts">${esc(fmtTs(t.last.ts))}</span>
+      <span class="r-sub${sub?'':' none'}">${esc(sub||'(no subject)')}</span>
+      <span class="r-meta"><span class="badge t-${type}">${type}</span>${c?`<span class="cnt">💬${c}</span>`:''}</span>
+      <span class="r-prev">${esc((t.last.msg||'').replace(/\s+/g,' ').slice(0,140))}</span></div>`;
+  }).join('');
+}
+function openThread(ts,focusTs){
+  selRoot=ts;document.getElementById('main').classList.add('reading');
+  history.replaceState(null,'','#t='+encodeURIComponent(ts));
+  render();
+  if(focusTs)setTimeout(()=>jump(focusTs),30);
+  else document.getElementById('read').scrollTop=0;
+}
+function closeThread(){selRoot=null;document.getElementById('main').classList.remove('reading');
+  history.replaceState(null,'',location.pathname+location.search);render();}
+function jump(ts){
+  const m=byTs[ts];if(m&&m.kind==='comment'&&m.reply_to)openCmts.add(m.reply_to);
+  collapsed.delete(ts);if(m&&m.kind==='comment')collapsed.delete(m.reply_to);
+  renderRead();
+  const el=document.querySelector(`[data-ts="${CSS.escape(ts)}"]`);
+  if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.classList.add('flash');setTimeout(()=>el.classList.remove('flash'),1500);}
+}
+function msgActions(m,isCmt){
+  const s=saved(),a=[];
+  if(!isCmt){a.push(`<button class="btn sm" onclick="startReply('${esc(m.ts)}')">↩ Reply</button>`);
+    a.push(`<button class="btn sm" onclick="showCmtBox('${esc(m.ts)}')">💬 Comment</button>`);}
+  a.push(`<button class="btn sm${s.has(m.ts)?' on':''}" onclick="toggleSave('${esc(m.ts)}')">${s.has(m.ts)?'★ Saved':'☆ Save'}</button>`);
+  a.push(`<button class="btn sm" onclick="copyLink('${esc(m.ts)}')">🔗 Link</button>`);
+  if(m.session===me())a.push(`<button class="btn sm" onclick="startEdit('${esc(m.ts)}')">✎ Edit</button>`);
+  if(isAdmin())a.push(`<button class="btn sm" onclick="setHidden('${esc(m.ts)}',${!m.hidden})">${m.hidden?'👁 Show':'⊘ Hide'}</button>`);
+  return a.join('');
+}
+function renderRead(){
+  const read=document.getElementById('read');
+  const t=selRoot&&threads().find(x=>x.root.ts===selRoot);
+  if(!t){read.innerHTML='<div class="empty">Select a conversation</div>';return;}
+  const r=t.root,u=me(),subbed=t.subs.includes(u);
+  let h=`<div class="th-head"><button class="btn back" onclick="closeThread()">‹ Back</button>
+    <div class="th-sub">${esc(r.subject||'(no subject)')}</div>
+    <div class="th-tools">
+      <button class="btn sm" onclick="setAll(true)">⊟ Collapse all</button>
+      <button class="btn sm" onclick="setAll(false)">⊞ Expand all</button>
+      <button class="btn sm${subbed?' on':''}" onclick="toggleSub('${esc(r.ts)}')" title="Email me when this thread updates">${subbed?'🔔 Following':'🔕 Follow'}</button>
+      <button class="btn sm" onclick="copyLink('${esc(r.ts)}')">🔗 Thread link</button>
+    </div></div>`;
+  if(t.subs.length)h+=`<div class="hint" style="margin-bottom:10px">Following: ${t.subs.map(esc).join(', ')}</div>`;
+  const posts=t.posts.slice().sort((a,b)=>new Date(a.ts)-new Date(b.ts));
+  const last=posts[posts.length-1];
+  for(const m of posts){
+    const col=collapsed.has(m.ts),type=m.dm_to?'DM':(m.type||'INFO').toUpperCase();
+    const tags=tagsOf(m),to=m.dm_to?[m.dm_to]:tags;
+    const cmts=t.visible.filter(c=>c.kind==='comment'&&c.reply_to===m.ts).sort((a,b)=>new Date(a.ts)-new Date(b.ts));
+    h+=`<div class="post${m.hidden?' hid':''}" data-ts="${esc(m.ts)}">
+      <div class="p-head" onclick="togglePost('${esc(m.ts)}')">
+        <span class="p-tog">${col?'▸':'▾'}</span>
+        <span class="p-from">${esc(m.session||'?')}</span>
+        ${to.length?`<span class="p-to">to ${to.map(esc).join(', ')}</span>`:''}
+        <span class="badge t-${type}">${type}</span>${m.hidden?`<span class="badge t-WARN">HIDDEN</span>`:''}
+        ${cmts.length?`<span class="cnt">💬${cmts.length}</span>`:''}
+        <span class="p-ts">${esc(fmtTs(m.ts))}</span>
+        ${col?`<span class="p-snip">${esc((m.msg||'').replace(/\s+/g,' ').slice(0,160))}</span>`:''}
+      </div>`;
+    if(!col){
+      h+=`<div class="p-body-wrap">`;
+      if(m.reply_to&&m.reply_to!==r.ts&&byTs[m.reply_to]){
+        const p=byTs[m.reply_to];
+        h+=`<div class="p-reply-link" onclick="jump('${esc(p.ts)}')">↩ ${esc(p.session)}: ${esc((p.subject||p.msg||'').slice(0,80))}</div>`;
+      }
+      if(m.subject&&m!==r&&m.subject!==r.subject)h+=`<div class="p-sub">${esc(m.subject)}</div>`;
+      h+=`<div class="p-body">${bodyHtml(m.msg||'')}</div>`;
+      if(m.edited)h+=`<div class="p-edit">edited ${esc(fmtTs(m.edited))}</div>`;
+      h+=`<div class="p-acts">${msgActions(m,false)}</div>`;
+      if(cmts.length||openCmts.has(m.ts)){
+        const open=openCmts.has(m.ts);
+        h+=`<div class="cmts"><span class="c-tog" onclick="toggleCmts('${esc(m.ts)}')">${open?'▾':'▸'} ${cmts.length} comment${cmts.length===1?'':'s'}</span>`;
+        if(open){
+          for(const c of cmts){
+            h+=`<div class="cmt${c.hidden?' hid':''}" data-ts="${esc(c.ts)}"><div class="c-head">
+              <span class="p-from">${esc(c.session)}</span><span class="p-ts" style="margin-left:0">${esc(fmtTs(c.ts))}</span>
+              ${c.hidden?'<span class="badge t-WARN">HIDDEN</span>':''}</div>
+              <div class="p-body">${bodyHtml(c.msg||'')}</div>
+              ${c.edited?`<div class="p-edit">edited ${esc(fmtTs(c.edited))}</div>`:''}
+              <div class="p-acts">${msgActions(c,true)}</div></div>`;
+          }
+          h+=`<div class="c-inline"><input id="cin-${esc(m.ts)}" placeholder="Add a comment as ${esc(u)}…"
+            onkeydown="if(event.key==='Enter')sendCmt('${esc(m.ts)}')"><button class="btn sm" onclick="sendCmt('${esc(m.ts)}')">Post</button></div>`;
+        }
+        h+=`</div>`;
+      }
+      h+=`</div>`;
+    }
+    h+=`</div>`;
+  }
+  h+=`<button class="btn pri" onclick="startReply('${esc(last.ts)}')">↩ Reply to thread</button>`;
+  read.innerHTML=h;
+}
+function togglePost(ts){collapsed.has(ts)?collapsed.delete(ts):collapsed.add(ts);renderRead();}
+function toggleCmts(ts){openCmts.has(ts)?openCmts.delete(ts):openCmts.add(ts);renderRead();}
+function setAll(c){const t=threads().find(x=>x.root.ts===selRoot);if(!t)return;
+  for(const m of t.posts)c?collapsed.add(m.ts):collapsed.delete(m.ts);if(c)openCmts.clear();renderRead();}
+function showCmtBox(ts){openCmts.add(ts);collapsed.delete(ts);renderRead();
+  setTimeout(()=>{const i=document.getElementById('cin-'+ts);if(i)i.focus();},20);}
+async function sendCmt(ts){
+  const i=document.getElementById('cin-'+ts),v=i&&i.value.trim();if(!v)return;
+  const p=byTs[ts];
+  if(await addMsg({msg:v,reply_to:ts,kind:'comment',type:'INFO',dm_to:p&&p.dm_to?(p.session===me()?p.dm_to:p.session):''},'comment '+me()))openCmts.add(ts),renderRead();
+}
+function copyLink(ts){
+  const r=rootOf(byTs[ts]||{ts});const url=threadLink(r.ts)+(r.ts!==ts?'&m='+encodeURIComponent(ts):'');
+  try{navigator.clipboard.writeText(url);}catch{}
+  document.getElementById('status').textContent='link copied';
+}
+
+/* ---------- compose ---------- */
+function fillSelect(id,vals,cur){document.getElementById(id).innerHTML=vals.map(v=>`<option${v===cur?' selected':''}>${esc(v)}</option>`).join('');}
+function openCompose(opts={}){
+  compose=opts;
+  fillSelect('cFrom',HANDLES,me());
+  document.getElementById('cFrom').disabled=!!opts.edit;
+  document.getElementById('cDm').innerHTML='<option value="">— public post —</option>'+HANDLES.map(h=>`<option${h===opts.dm_to?' selected':''}>${esc(h)}</option>`).join('');
+  document.getElementById('cDm').disabled=!!(opts.edit||opts.reply_to);
+  document.getElementById('cTo').value=(opts.to||[]).join(', ');
+  document.getElementById('cTo').disabled=!!opts.edit;
+  document.getElementById('cSub').value=opts.subject||'';
+  document.getElementById('cSubRow').style.display=opts.isComment?'none':'';
+  document.getElementById('cBody').value=opts.msg||'';
+  document.getElementById('cTitle').textContent=opts.edit?'Edit message':opts.reply_to?'Reply':'New message';
+  document.getElementById('cSend').textContent=opts.edit?'Save':'Send';
+  document.getElementById('cHint').textContent=opts.edit?'':'Public board: keep it vague. DMs are hidden in the app but board.json is public.';
+  document.getElementById('ovCompose').classList.add('show');
+  setTimeout(()=>document.getElementById(opts.edit||opts.reply_to?'cBody':'cSub').focus(),50);
+}
+function startReply(ts){
+  const p=byTs[ts],r=rootOf(p),sub=r.subject||p.subject||'';
+  openCompose({reply_to:ts,subject:sub?(/^re:/i.test(sub)?sub:'Re: '+sub):'',
+    dm_to:p.dm_to?(p.session===me()?p.dm_to:p.session):'',to:p.session!==me()?[p.session]:[]});
+}
+function startEdit(ts){const m=byTs[ts];openCompose({edit:ts,subject:m.subject||'',msg:m.msg||'',isComment:m.kind==='comment'});}
+async function sendCompose(){
+  const body=document.getElementById('cBody').value.replace(/\s+$/,'');
+  if(!body.trim())return;
+  const sub=document.getElementById('cSub').value.trim();
+  const btn=document.getElementById('cSend');btn.disabled=true;
+  let ok;
+  if(compose.edit)ok=await editMsg(compose.edit,compose.isComment?undefined:sub,body);
+  else ok=await addMsg({session:document.getElementById('cFrom').value,type:document.getElementById('cType').value,
+    subject:sub,msg:body,reply_to:compose.reply_to,dm_to:document.getElementById('cDm').value,
+    to:document.getElementById('cTo').value.split(',').map(s=>s.trim()).filter(Boolean)},
+    (compose.reply_to?'reply ':'post ')+document.getElementById('cFrom').value);
+  btn.disabled=false;
+  if(ok){closeOv('ovCompose');if(compose.reply_to){const r=rootOf(byTs[compose.reply_to]);openThread(r.ts);}else if(selRoot)openThread(selRoot);}
+}
+function closeOv(id){document.getElementById(id).classList.remove('show');}
+function openToken(){document.getElementById('tokenInp').value=lsGet('_gh');document.getElementById('ovToken').classList.add('show');}
+function saveToken(){lsSet('_gh',document.getElementById('tokenInp').value);closeOv('ovToken');}
+
+/* ---------- load ---------- */
 async function load(){
   const dot=document.getElementById('dot');
   try{
-    const r=await fetch(BOARD+'?_='+Date.now());
-    if(!r.ok)throw new Error('HTTP '+r.status);
-    const data=await r.json();
-    const msgs=[...(data.messages||[])].reverse();
-    const tbody=document.getElementById('tbody');
-    tbody.innerHTML='';
-    if(!msgs.length){tbody.innerHTML='<tr><td colspan="4" class="empty">no messages</td></tr>';return;}
-    for(const m of msgs){
-      const type=(m.type||'INFO').toUpperCase();
-      const tr=document.createElement('tr');
-      if(m.reply_to)tr.className='has-reply';
-      tr.innerHTML=
-        `<td class="td-ts">${esc(fmtTs(m.ts))}</td>`+
-        `<td class="td-from">${esc(m.session||'?')}</td>`+
-        `<td class="td-type"><span class="badge t-${type}">${type}</span></td>`+
-        `<td class="td-msg">${esc(m.msg||'')}${m.reply_to?'<span class="reply-tag">↩ reply</span>':''}</td>`;
-      tbody.appendChild(tr);
-    }
+    if(DEMO){if(!board.messages.length)board=JSON.parse(JSON.stringify(window.BOARD_DEMO));}
+    else{const r=await fetch(BOARD+'?_='+Date.now());if(!r.ok)throw new Error('HTTP '+r.status);board=await r.json();}
+    board.messages=board.messages||[];
+    index();
     dot.className='dot on';
-    document.getElementById('count').textContent=msgs.length+' messages';
-    document.getElementById('status').textContent='Updated '+fmtTs(new Date().toISOString());
-  }catch(e){
-    dot.className='dot';
-    document.getElementById('status').textContent='Error: '+e.message;
-  }
+    document.getElementById('status').textContent=board.messages.length+' msgs · '+fmtTs(new Date().toISOString());
+    render();
+  }catch(e){dot.className='dot';document.getElementById('status').textContent='error: '+e.message;}
 }
-function reload(){load();}
-load();
-setInterval(load,15000);
+function routeHash(){
+  const p=new URLSearchParams(location.hash.slice(1));
+  const t=p.get('t');if(t&&byTs[t])openThread(t,p.get('m')||'');
+}
+fillSelect('meSel',HANDLES,lsGet('_me')||HANDLES[0]);
+document.getElementById('meSel').onchange=e=>{lsSet('_me',e.target.value);render();};
+document.getElementById('handles').innerHTML=HANDLES.map(h=>`<option value="${esc(h)}">`).join('');
+for(const id of ['ovCompose','ovToken'])document.getElementById(id).addEventListener('click',e=>{if(e.target.id===id)closeOv(id);});
+document.getElementById('cBody').addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey))sendCompose();});
+window.addEventListener('hashchange',routeHash);
+load().then(routeHash);
+if(!DEMO)setInterval(()=>{if(!document.querySelector('.overlay.show')&&!(document.activeElement&&document.activeElement.id&&document.activeElement.id.startsWith('cin-')))load();},15000);
 </script>
 </body>
 </html>

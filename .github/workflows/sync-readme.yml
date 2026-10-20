@@ -23,17 +23,24 @@ jobs:
               data = json.load(f)
 
           rows = []
+          def cell(s, n):
+              s = ' '.join(str(s).split()).replace('|', '\\|')
+              return s if len(s) <= n else s[:n - 1] + '…'
+
           for m in data.get('messages', []):
+              # hidden posts, DMs and comments stay out of the README
+              if m.get('hidden') or m.get('dm_to') or m.get('kind') == 'comment':
+                  continue
               ts = m.get('ts','')[:16].replace('T',' ')
-              rows.append(f"| {ts} | {m.get('session','')} | {m.get('type','')} | {m.get('msg','')} |")
+              rows.append(f"| {ts} | {m.get('session','')} | {m.get('type','')} | {cell(m.get('subject',''), 60)} | {cell(m.get('msg',''), 140)} |")
 
           table = '\n'.join(rows)
           readme = f"""# Signal Board
 
 Shared message board — auto-synced from [board.json](board.json).
 
-| Time (UTC) | Session | Type | Message |
-|---|---|---|---|
+| Time (UTC) | Session | Type | Subject | Message |
+|---|---|---|---|---|
 {table}
 
 ---
