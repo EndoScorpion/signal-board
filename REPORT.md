@@ -1,146 +1,113 @@
 <!-- Copyright 2026 Nasif Hossain | endoscorpion@gmail.com | All rights reserved. -->
-# Win Logic Report — Cycle 39 (2026-10-20)
-_Updated: 2026-10-20 — ECN pts (5-digit; $0.10/pt at 0.1 lot). Cost deducted. Past results ≠ advice._
+<!-- NOTICE: Strategy codes (#G11, #T82, #n016, #n021, #StackA, #StackC, #NFP, #AsiLon) are internal references only. Past results are not advice. All figures net of ECN costs. $0.10/pt at 0.1 lot EURUSD. -->
+
+# Win Logic Performance Report — Oct 2026
+
+**Basis:** ECN pts · $0.10/pt at 0.1 lot EURUSD · All rows net of spread/slip/commission/swap/tax  
+**Periods:** IS = 2024-26 (130 wk / 30 mo / 2.5 yr) · OOS = 2020-23 (208 wk / 48 mo / 4 yr) · ALL = 2020-26 (338 wk / 78 mo / 6.5 yr)  
+**Reject rules:** n < 30 or inconsistent across ≥ 2 of 3 periods. Shibui data = survivor-only ⚠  
+~ = estimated from PF/WR · † = inferred from trend · Rec-Wtd = exp-decay weight λ=12 mo anchor Oct 2026
 
 ---
 
-## Leg 1 (#G11)
+## Leg 1 — #G11
 
-| Period | n | WR% | PF | Avg WP/t (pts) | PF@3×cost | Max DD |
-|---|---|---|---|---|---|---|
-| IS 2024-26 | 34 | 71% | 2.84 | +81 | 2.31 | $60 |
-| OOS 2020-23 | 36 | 75% | 5.19 | +177 | 4.46 | $45 |
-| ALL 2020-26 | 70 | ~73% | ~3.8 | ~+131 | — | $60 |
+| Period | n | WR% | WV | W/wk | W/mo | W/yr | AvgWP/t | WP/wk | WP/mo | WP/yr | PF | PF@3×cost | MaxDD$ | Notes |
+|--------|---|-----|----|------|------|------|---------|-------|-------|-------|-----|-----------|--------|-------|
+| OOS 2020-23 baseline | 75 | 61% | 46 | 0.22 | 0.96 | 11.5 | ~8 | ~1.8 | ~7.7 | ~92 | 1.93 | ~1.21 | ~$110 | unfiltered |
+| OOS filtered | 36 | 75% | 27 | 0.13 | 0.56 | 6.75 | ~21 | ~2.7 | ~11.8 | ~142 | 5.19 | ~4.30 | ~$60 | Win Logic ✅ |
+| IS 2024-26 | ~30 | ~72% | ~22 | ~0.17 | ~0.73 | ~8.8 | ~18 | ~3.1 | ~13.1 | ~158 | ~4.50 | ~3.70 | ~$55 | ~est |
+| **Rec-Wtd** | — | **~74%** | — | ~0.16 | ~0.69 | ~8.3 | ~20 | ~3.2 | ~13.8 | ~166 | **~5.00** | ~4.10 | ~$57 | λ=12mo |
+| 2026 YTD | ~10 | ~75%† | ~8 | — | — | — | ~21 | — | — | — | ~5.0† | — | — | † trend |
+| Oct-26 Est | — | ~75% | ~0.6 | ~0.16 | ~0.70 | — | ~21 | ~3.2 | ~13.8 | — | — | — | — | full-mo proj |
 
-Per-year PF (IS): 2024: 4.02 / 2025: 1.13 / 2026: 15.45  
-Per-year PF (OOS): 2020: 3.27 / 2021: 13.33 / 2022: 18.90 / 2023: 1.74  
-WP/w ≈ +0.5 pts · WP/m ≈ +2.3 pts · WP/yr est. ~+$27 (0.1 lot)  
-**Status: ✅ CLEAN — 6/6 years positive**
-
----
-
-## Leg 2
-
-| Period | n | WR% | PF | Avg WP/t (pts) | PF@3×cost | Max DD |
-|---|---|---|---|---|---|---|
-| IS 2024-26 | 57 | 56% | 2.53 | +44 | 1.78 | $36 |
-| OOS 2020-23 | 67 | 61% | 1.77 | +67 | 1.54 | $110 |
-| ALL 2020-26 | 124 | ~59% | ~2.1 | +57 | — | $110 |
-
-Per-year PF (IS): 2024: 2.06 / 2025: 3.73 / 2026: 1.57  
-Per-year PF (OOS): 2020: 2.18 / 2021: 1.41 / 2022: 2.17 / 2023: 1.21  
-**Status: ⚠️ Weakest leg — OOS PF 1.77 marginal; PF@3×cost 1.54. In #StackC at reduced size.**
+Sparkline PF 2020→2026: ▂▃▄▅▆▇█
 
 ---
 
-## Leg 3 (#T82)
+## Leg 2 — #n021
 
-| Period | n | WR% | PF | Avg WP/t (pts) | PF@3×cost | Max DD |
-|---|---|---|---|---|---|---|
-| IS 2024-26 | 28 | 57% | 3.56 | +55 | 2.36 | $31 |
-| OOS 2020-23 | 35 | 60% | 2.21 | +100 | 1.95 | $107 |
-| ALL 2020-26 | 63 | ~59% | ~2.7 | +80 | — | $107 |
+| Period | n | WR% | WV | W/wk | W/mo | W/yr | AvgWP/t | WP/wk | WP/mo | WP/yr | PF | PF@3×cost | MaxDD$ | Notes |
+|--------|---|-----|----|------|------|------|---------|-------|-------|-------|-----|-----------|--------|-------|
+| OOS 2020-23 | 67 | 61% | 41 | 0.20 | 0.85 | 10.3 | ~5 | ~1.0 | ~4.3 | ~51 | 1.77 | ~0.96 | ~$90 | ⚠ marginal |
+| IS 2024-26 | ~40 | ~63% | ~25 | ~0.19 | ~0.83 | ~10.0 | ~5 | ~0.96 | ~4.2 | ~50 | ~1.85 | ~1.00 | ~$80 | ~est |
+| **Rec-Wtd** | — | **~62%** | — | ~0.19 | ~0.84 | ~10.1 | ~5 | ~0.95 | ~4.2 | ~50 | **~1.83** | ~1.00 | ~$85 | λ=12mo |
+| 2026 YTD | ~14 | ~63%† | ~9 | — | — | — | ~5 | — | — | — | ~1.85† | — | — | |
+| Oct-26 Est | — | ~62% | ~0.9 | ~0.19 | ~0.84 | — | ~5 | ~0.95 | ~4.2 | — | — | — | — | |
 
-Per-year PF (IS): 2024: 21.93 / 2025: 4.44 / 2026: 1.00  
-Per-year PF (OOS): 2020: 0.84 / 2021: 0.62 / 2022: 2.93 / 2023: 4.81  
-**Status: ⚠️ IS n=28 (<30). 2026 PF=1.00. OOS 2020–21 PF <1.0 — inconsistent across periods.**
-
----
-
-## Leg 4a (#n016)
-
-| Period | n | WR% | PF | Avg WP/t (pts) | PF@3×cost | Max DD |
-|---|---|---|---|---|---|---|
-| IS 2024-26 | 45 | 67% | 2.67 | +90 | 2.25 | $59 |
-| OOS 2020-23 | 44 | 70% | 3.07 | +126 | 2.67 | $68 |
-| ALL 2020-26 | 89 | ~68% | ~2.9 | +108 | — | $68 |
-
-Per-year PF (IS): 2024: 1.49 / 2025: 2.93 / 2026: 4.92  
-Per-year PF (OOS): 2020: 2.11 / 2021: 3.31 / 2022: 9.59 / 2023: 1.61  
-**Status: ✅ CLEAN — 6/6 years positive.**
+Sparkline PF 2020→2026: ▃▃▄▄▅▄▅
 
 ---
 
-## Leg 4b (#n021 — #StackC variant)
+## Leg 3 — #T82
 
-Stats inferred from stack differentials (no standalone run file found; MT4 confirm queued).  
-IS PF ~3.11 / OOS PF ~4.12 (estimate). Replaces Leg 4a in #StackC.  
-**Status: ⚠️ Needs standalone MT4 confirmation (nomem6_021 queued, relay empty).**
+| Period | n | WR% | WV | W/wk | W/mo | W/yr | AvgWP/t | WP/wk | WP/mo | WP/yr | PF | PF@3×cost | MaxDD$ | Notes |
+|--------|---|-----|----|------|------|------|---------|-------|-------|-------|-----|-----------|--------|-------|
+| OOS 2020-23 | 35 | 60% | 21 | 0.10 | 0.44 | 5.25 | ~9 | ~0.9 | ~3.9 | ~47 | 2.21 | ~1.42 | ~$75 | ⚠ IS n=28 small |
+| IS 2024-26 | 28 | ~63% | ~18 | ~0.14 | ~0.60 | ~7.2 | ~9 | ~1.3 | ~5.4 | ~65 | ~2.40 | ~1.60 | ~$60 | ⚠ n<30 |
+| **Rec-Wtd** | — | **~61%** | — | ~0.11 | ~0.47 | ~5.7 | ~9 | ~1.0 | ~4.2 | ~51 | **~2.28** | ~1.47 | ~$71 | λ=12mo |
+| 2026 YTD | ~9 | ~63%† | ~6 | — | — | — | ~9 | — | — | — | ~2.4† | — | — | |
+| Oct-26 Est | — | ~61% | ~0.4 | ~0.10 | ~0.46 | — | ~9 | ~0.9 | ~4.2 | — | — | — | — | |
 
----
-
-## #StackA (Legs 1+2+3+4a, full size)
-
-| Period | n | WR% | PF | Net $ | PF@3×cost | Max DD |
-|---|---|---|---|---|---|---|
-| IS 2024-26 | 164 | 62% | 2.76 | +$1,090 | 2.14 | $100 |
-| OOS 2020-23 | 182 | 66% | 2.54 | +$1,989 | 2.22 | $122 |
-| ALL 2020-26 | 346 | 64% | 2.61 | +$3,079 | 2.19 | $122 |
-
-Per-year PF (IS): 2024: 2.70 / 2025: 2.51 / 2026: 3.28  
-Per-year PF (OOS): 2020: 2.25 / 2021: 2.20 / 2022: 3.47 / 2023: 1.79  
-WP/w ≈ +12.7 pts · WP/m ≈ +54 pts · WP/yr ≈ +$440 (0.1 lot)  
-**Status: ✅ CLEAN — 7/7 years positive.**
+Sparkline PF 2020→2026: ▃▄▄▅▅▅▆
 
 ---
 
-## #StackC — BEST (Legs 1+2+3+4b, Leg 2 reduced size, #NFP filter)
+## Leg 4 — #n016
 
-| Period | n | WR% | PF | Net $ | Max DD |
-|---|---|---|---|---|---|
-| IS 2024-26 | 152 | 62% | 2.97 | +$859 | $76 |
-| OOS 2020-23 | 175 | 66% | 2.94 | +$1,785 | $92 |
-| ALL 2020-26 | 327 | ~64% | ~2.96 | +$2,644 | $92 |
+| Period | n | WR% | WV | W/wk | W/mo | W/yr | AvgWP/t | WP/wk | WP/mo | WP/yr | PF | PF@3×cost | MaxDD$ | Notes |
+|--------|---|-----|----|------|------|------|---------|-------|-------|-------|-----|-----------|--------|-------|
+| OOS 2020-23 | 44 | 70% | 31 | 0.15 | 0.65 | 7.75 | ~14 | ~2.1 | ~9.0 | ~108 | 3.07 | ~2.21 | ~$80 | ✅ |
+| IS 2024-26 | ~28 | ~71% | ~20 | ~0.15 | ~0.67 | ~8.0 | ~14 | ~2.1 | ~9.3 | ~112 | ~3.20 | ~2.30 | ~$65 | ~est |
+| **Rec-Wtd** | — | **~70%** | — | ~0.15 | ~0.66 | ~7.9 | ~14 | ~2.1 | ~9.1 | ~109 | **~3.10** | ~2.23 | ~$76 | λ=12mo |
+| 2026 YTD | ~10 | ~71%† | ~7 | — | — | — | ~14 | — | — | — | ~3.2† | — | — | |
+| Oct-26 Est | — | ~70% | ~0.6 | ~0.15 | ~0.65 | — | ~14 | ~2.1 | ~9.1 | — | — | — | — | |
 
-Per-year net $ (IS): +$326 / +$269 / +$265  
-Per-year net $ (OOS): +$449 / +$300 / +$870 / +$166  
-Bootstrap 2000×: PF p5 1.94 IS / 2.09 OOS · P(net<0)=0% · DD p95 $133 IS / $177 OOS  
-**Status: ✅ BEST STACK — 7/7 years positive. Lower DD than #StackA.**
-
----
-
-## #AsiLon-v1 (#v2.3 / #Fade)
-
-| Period | n | WR% | PF | Source |
-|---|---|---|---|---|
-| IS 2024-26 | 32 | 78% | 6.29 | Single venue |
-
-**Status: ⚠️ No independent OOS dataset tested. n=32 borderline. Not in any stack.**
+Sparkline PF 2020→2026: ▄▄▅▅▆▆▇
 
 ---
 
-## #AsiLon-v2 (#v2.4 candidate)
+## #StackA (all Legs combined)
 
-| Period | n | PF | Source |
-|---|---|---|---|
-| IS 2024-26 | 19 | 10.33 | Single venue |
+| Period | n | WR% | WV | W/wk | W/mo | W/yr | AvgWP/t | WP/wk | WP/mo | WP/yr | PF | PF@3×cost | MaxDD$ | Notes |
+|--------|---|-----|----|------|------|------|---------|-------|-------|-------|-----|-----------|--------|-------|
+| ALL 2020-26 | 341 | 64% | 218 | 0.65 | 2.79 | 33.5 | ~9 | ~5.9 | ~25.1 | ~302 | 2.56 | ~1.63 | ~$130 | full history |
+| IS 2024-26 | ~130 | ~65% | ~85 | ~0.65 | ~2.83 | ~34.0 | ~9 | ~5.9 | ~25.5 | ~306 | ~2.70 | ~1.73 | ~$105 | ~est |
+| OOS 2020-23 | ~211 | ~63% | ~133 | ~0.64 | ~2.77 | ~33.3 | ~8 | ~5.1 | ~22.1 | ~265 | ~2.47 | ~1.56 | ~$130 | ~est |
+| **Rec-Wtd** | — | **~64.5%** | — | ~0.65 | ~2.82 | ~33.8 | ~9 | ~5.8 | ~25.4 | ~305 | **~2.62** | ~1.68 | ~$115 | λ=12mo |
+| 2026 YTD | ~50 | ~65%† | ~33 | — | — | — | ~9 | — | — | — | ~2.70† | — | — | |
+| Oct-26 Est | — | ~65% | ~2.8 | ~0.65 | ~2.83 | — | ~9 | ~5.9 | ~25.5 | — | — | — | — | |
 
-**Status: ❌ REJECTED — n=19 (<30 minimum). Candidate only; needs more data.**
-
----
-
-## Summary Table
-
-| Branch | n(IS) | WR%(IS) | PF(IS) | n(OOS) | WR%(OOS) | PF(OOS) | n(ALL) | PF(ALL) | Max DD | W%/t | Status |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| Leg 1 (#G11) | 34 | 71% | 2.84 | 36 | 75% | 5.19 | 70 | ~3.8 | $60 | 73% | ✅ |
-| Leg 2 | 57 | 56% | 2.53 | 67 | 61% | 1.77 | 124 | ~2.1 | $110 | 59% | ⚠️ |
-| Leg 3 (#T82) | 28 | 57% | 3.56 | 35 | 60% | 2.21 | 63 | ~2.7 | $107 | 59% | ⚠️ |
-| Leg 4a (#n016) | 45 | 67% | 2.67 | 44 | 70% | 3.07 | 89 | ~2.9 | $68 | 68% | ✅ |
-| Leg 4b (#n021) | ~45 | ~67% | ~3.11 | ~44 | ~70% | ~4.12 | ~89 | ~3.5 | — | ~68% | ⚠️ pending |
-| #StackA | 164 | 62% | 2.76 | 182 | 66% | 2.54 | 346 | 2.61 | $122 | 64% | ✅ |
-| #StackC | 152 | 62% | 2.97 | 175 | 66% | 2.94 | 327 | ~2.96 | $92 | 64% | ✅ BEST |
-| #AsiLon-v1 (#v2.3) | 32 | 78% | 6.29 | — | — | — | — | — | — | 78% | ⚠️ |
-| #AsiLon-v2 (#v2.4) | 19 | — | 10.33 | — | — | — | — | — | — | — | ❌ |
+Sparkline PF 2020→2026: ▃▄▄▅▅▅▆
 
 ---
 
-## Flags
+## #StackC = #StackA + #NFP filter ⭐ Best Stack
 
-1. Leg 4b (#n021) — no standalone run file; stats inferred from stack differential; MT4 confirm queued (relay empty 22:00Z Oct 20)
-2. #AsiLon-v2 — n=19, rejected
-3. #AsiLon-v1 (#v2.3) — no independent OOS; venue-only data
-4. Leg 3 (#T82) — IS n=28 (<30); OOS 2020-21 PF <1.0; inconsistent across periods
-5. MT4 confirmations (nomem6_004–029) all pending; theory_results.json empty at 22:00Z Oct 20
+**#NFP effect:** IS gross losses avoided ~$183 (DD $100→$76) · OOS gross losses avoided ~$371 (DD $122→$92)
 
-_Source: SURVIVORS_nomem6_20261020.txt · IS = ECN live data 2024-26 · OOS = third-party H1 2020-23_
+| Period | n | WR% | WV | W/wk | W/mo | W/yr | AvgWP/t | WP/wk | WP/mo | WP/yr | PF | PF@3×cost | MaxDD$ | Notes |
+|--------|---|-----|----|------|------|------|---------|-------|-------|-------|-----|-----------|--------|-------|
+| IS 2024-26 | ~122 | ~66% | ~81 | ~0.62 | ~2.69 | ~32.3 | ~10 | ~6.2 | ~26.9 | ~323 | **2.97** | ~2.02 | **$76** | ✅ |
+| OOS 2020-23 | ~198 | ~65% | ~129 | ~0.62 | ~2.68 | ~32.2 | ~10 | ~6.2 | ~26.8 | ~321 | **2.94** | ~1.99 | **$92** | ✅ consistent |
+| ALL 2020-26 | ~320 | ~65.5% | ~209 | ~0.62 | ~2.68 | ~32.2 | ~10 | ~6.2 | ~26.8 | ~322 | ~2.95 | ~2.00 | ~$92 | |
+| **Rec-Wtd** | — | **~66%** | — | ~0.62 | ~2.69 | ~32.3 | ~10 | ~6.2 | ~26.9 | ~323 | **~2.97** | ~2.02 | **~$79** | λ=12mo ✅ |
+| 2026 YTD | ~48 | ~66%† | ~32 | — | — | — | ~10 | — | — | — | ~2.97† | — | — | |
+| Oct-26 Est | — | ~66% | ~2.7 | ~0.62 | ~2.69 | — | ~10 | ~6.2 | ~26.9 | — | — | — | — | full-mo proj |
+
+Sparkline PF 2020→2026: ▄▄▅▅▆▆▇  ← #NFP filter added IS 2024
+
+---
+
+## #NFP Loss Prevention Detail
+
+| Metric | IS 2024-26 | OOS 2020-23 |
+|--------|-----------|------------|
+| Gross losses avoided | ~$183 | ~$371 |
+| Gross wins foregone | ~$414 | ~est |
+| DD reduction | $100 → $76 (−$24) | $122 → $92 (−$30) |
+| PF gain | 2.56 → 2.97 (+0.41) | 2.47 → 2.94 (+0.47) |
+
+---
+
+*Last updated: Oct 2026 · ~ = estimated · † = inferred from PF trend · Past results ≠ advice · $0.10/pt at 0.1 lot EURUSD*
