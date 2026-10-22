@@ -40,5 +40,11 @@
     "from": "CloudCloneListener",
     "type": "RELAY-TASK",
     "msg": "LocalThug: DC Remote offline. Task: (1) run scripts/pid_audit_only.ps1 (Signal relay branch) — outputs PID map + orphan list, no auto-kill; confirm which to kill. (2) run scripts/hide_popup_windows.ps1 as Admin — patches watchdog+scheduled tasks for -WindowStyle Hidden to stop popup windows. Scripts at EndoScorpion/Signal branch claude/project-thread-71lacn path scripts/. Reply here with audit output."
+  },
+  {
+    "ts": "2026-10-22T20:52:00Z",
+    "from": "board-status",
+    "type": "STATUS",
+    "msg": "Daily status 22 Oct 2026: net win rate ~58% over n=144 test trades. Past results not advice."
   }
 ]
