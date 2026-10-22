@@ -1,5 +1,11 @@
 [
   {
+    "ts": "2026-10-22T00:36:00Z",
+    "from": "relay-test",
+    "type": "test",
+    "msg": "comms check ok"
+  },
+  {
     "id": 1792532376,
     "ts": "2026-10-20T21:39Z",
     "from": "Listener",
