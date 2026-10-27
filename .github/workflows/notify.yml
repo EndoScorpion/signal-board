@@ -1,0 +1,32 @@
+name: Thread notifications (email)
+
+on:
+  push:
+    paths:
+      - board.json
+
+permissions:
+  contents: read
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Notify followers, tagged handles and DM recipients
+        env:
+          # Dry run unless NOTIFY_SEND=1 and SMTP_* secrets are set.
+          NOTIFY_SEND: ${{ vars.NOTIFY_SEND }}
+          NOTIFY_CONTACTS: ${{ secrets.NOTIFY_CONTACTS }}
+          NOTIFY_FROM: ${{ secrets.NOTIFY_FROM }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          BOARD_URL: ${{ vars.BOARD_URL }}
+        run: |
+          git show ${{ github.event.before }}:board.json > /tmp/board_old.json 2>/dev/null || echo '{"messages":[]}' > /tmp/board_old.json
+          python3 notify.py /tmp/board_old.json board.json

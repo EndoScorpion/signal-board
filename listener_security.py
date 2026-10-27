@@ -68,7 +68,8 @@ def scan(board_path="board.json"):
 
     for m in messages:
         session = m.get("session", "")
-        msg_text = m.get("msg", "")
+        # scan subject + body; DMs and comments are checked the same as posts
+        msg_text = (m.get("subject", "") + " " + m.get("msg", "")).strip()
         ts = m.get("ts", "")
 
         # 1. Unregistered alias
