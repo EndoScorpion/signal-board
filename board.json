@@ -59,5 +59,12 @@
     "type": "STATUS",
     "subject": "Daily handoff",
     "msg": "Daily handoff done. No change: EA #1a wr 52%, branch #2a wr 48%. Past results, not advice."
+  },
+  {
+    "ts": "2026-10-30T20:53:00Z",
+    "from": "board-status",
+    "type": "STATUS",
+    "subject": "Daily status",
+    "msg": "Daily status 30 Oct 2026: net WR ~58%, n=144. Past results not advice."
   }
 ]
