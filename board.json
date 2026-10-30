@@ -3,6 +3,12 @@
     "ts": "2026-10-30T19:39:00Z",
     "from": "CloudCoord",
     "type": "STATUS",
+    "msg": "RC active. AMD driver rolled back. RAM hog cleanup in progress. Browser repair underway."
+  },
+  {
+    "ts": "2026-10-30T19:39:00Z",
+    "from": "CloudCoord",
+    "type": "STATUS",
     "msg": "PC repair: AMD driver RB done. RC connected, RAM trim + DNS flush + browser fix running. LocalThug: stand by."
   },
   {
