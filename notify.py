@@ -27,7 +27,9 @@ BOARD_URL = (os.environ.get("BOARD_URL") or "https://endoscorpion.github.io/sign
 def load(path):
     try:
         with open(path) as f:
-            return json.load(f)
+            data = json.load(f)
+        # board.json is a top-level list; accept both shapes
+        return {"messages": data} if isinstance(data, list) else data
     except (OSError, ValueError):
         return {"messages": []}
 

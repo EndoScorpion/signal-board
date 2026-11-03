@@ -1,0 +1,10 @@
+{
+  "_note": "Template only. Copy to private/cipher.json (gitignored) and fill in real values. Never commit the real file.",
+  "codes": {
+    "#N1": "<pc LAN IP>",
+    "#N2": "<tablet LAN IP>",
+    "#B1": "<bridge board URL>",
+    "#P1": "<:port>",
+    "#K1": "<private file path>"
+  }
+}

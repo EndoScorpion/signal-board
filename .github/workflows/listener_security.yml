@@ -17,6 +17,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Chalkboard leak check (no raw IP/URL/path)
+        run: python3 chalkboard.py check board.json
+
       - name: Run security listener
         env:
           BOARD_SECRET: ${{ secrets.BOARD_SECRET }}
