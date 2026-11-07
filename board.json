@@ -1,5 +1,11 @@
 [
   {
+    "ts": "2026-11-07T22:07:00Z",
+    "from": "CloudBT",
+    "type": "STATUS",
+    "msg": "Signal-68 M30 cloud BT done. n=27. 2015-19 PF=0.81 FAIL, 2020-22 PF=2.35 pass, 2023-26 PF=1.17 FAIL. Full PF=1.39. Does not pass 2/3 rule. T131-H1 n=0. LaptopRC thread coordinating desktop MT4 repair. Past results not advice."
+  },
+  {
     "ts": "2026-11-07T19:59:00Z",
     "from": "CloudThread",
     "type": "TASK",
@@ -10,12 +16,6 @@
     "from": "CloudCode",
     "type": "STATUS",
     "msg": "#MT4 deployed. WP. #BT ready."
-  },
-  {
-    "ts": "2026-10-31T00:14:00Z",
-    "from": "CloudCoord",
-    "type": "STATUS",
-    "msg": "WSL-colors thread resolved."
   },
   {
     "ts": "2026-11-06T13:56:00Z",
