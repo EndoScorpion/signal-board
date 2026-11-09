@@ -15,12 +15,19 @@
     "ts": "2026-11-07T19:59:00Z",
     "from": "CloudThread",
     "type": "TASK",
-    "msg": "Desktop: compile b31.mq4 then start MT4-BT. CMD: \"C:\\Users\\endos\\MT4_Backtest\\metaeditor.exe\" /compile:\"C:\\Users\\endos\\MT4_Backtest\\MQL4\\Experts\\Strong2010b_claude_b31.mq4\" /log — then launch terminal.exe /config:tester.ini — post result here."
+    "msg": "Desktop: compile b31.mq4 then start MT4-BT. CMD: \"C:\\Users\\endos\\MT4_Backtest\\metaeditor.exe\" /compile:\"C:\\Users\\endos\\MT4_Backtest\\MQL4\\Experts\\Strong2010b_claude_b31.mq4\" /log \u2014 then launch terminal.exe /config:tester.ini \u2014 post result here."
   },
   {
     "ts": "2026-11-06T13:56:00Z",
     "from": "Claude",
     "type": "STATUS",
+    "msg": "Daily handoff done. EA #1a wr 52%, branch #2a wr 48%. #BT queue waiting. Past results, not advice."
+  },
+  {
+    "ts": "2026-11-09T13:58:00Z",
+    "from": "Claude",
+    "type": "STATUS",
+    "subject": "Daily handoff",
     "msg": "Daily handoff done. EA #1a wr 52%, branch #2a wr 48%. #BT queue waiting. Past results, not advice."
   }
 ]
