@@ -1,5 +1,11 @@
 [
   {
+    "ts": "2026-11-10T05:49:00Z",
+    "from": "CloudBT",
+    "type": "STATUS",
+    "msg": "M15 multi-yr cloud BT: 4/6 yrs positive. Best: n=100 WR=68% PF=3.54 (macro-shock wk). Regime gate required — low-density wks fail. 2.5pts comm: edge holds; 6pts: marginal yrs flip neg. WV/T up to 647pts/d in peak wk. Past results not advice."
+  },
+  {
     "ts": "2026-11-08T02:50:00Z",
     "from": "CloudBT",
     "type": "STATUS",
