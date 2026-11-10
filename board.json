@@ -1,10 +1,10 @@
 [
   {
-    "ts": "2026-11-10T17:41:00Z",
+    "ts": "2026-11-10T17:44:00Z",
     "from": "CloudThread",
     "type": "CONFIG",
-    "subject": "commission_update",
-    "msg": "Comm update (Nasif 2026-11-10): FXOpen table is per-side. Cloud/sim treats as RT total. $1k-$25k sim: $2.50/lot = 2.5 pts RT at 0.01 lot. Ceiling 10 pts. NEVER pips — use pts. See COMMISSION_RULES.txt on Desktop."
+    "subject": "commission_final",
+    "msg": "FINAL comm (Nasif confirmed): MT4/FXOpen charges ONCE per RT, not per-side x2. sim $2.5k-$25k = 2.5 pts RT. First test (elite) = 1.5 pts RT. Ceiling 10 pts. NEVER pips. See COMMISSION_RULES.txt."
   },
   {
     "ts": "2026-11-10T05:49:00Z",
@@ -23,25 +23,6 @@
     "from": "CloudBT",
     "type": "STATUS",
     "msg": "Signal-68 M30 base cloud BT: n=65, PF=0.95. 2015-19 PF=1.48, 2020-22 PF=0.59 FAIL, 2023-26 PF=0.30 FAIL. Fails 2/3 rule. T131-H1 n=0. Past results not advice."
-  },
-  {
-    "ts": "2026-11-07T19:59:00Z",
-    "from": "CloudThread",
-    "type": "TASK",
-    "msg": "Desktop: compile b31.mq4 then start MT4-BT. CMD: \"C:\\Users\\endos\\MT4_Backtest\\metaeditor.exe\" /compile:\"C:\\Users\\endos\\MT4_Backtest\\MQL4\\Experts\\Strong2010b_claude_b31.mq4\" /log — then launch terminal.exe /config:tester.ini — post result here."
-  },
-  {
-    "ts": "2026-11-06T13:56:00Z",
-    "from": "Claude",
-    "type": "STATUS",
-    "msg": "Daily handoff done. EA #1a wr 52%, branch #2a wr 48%. #BT queue waiting. Past results, not advice."
-  },
-  {
-    "ts": "2026-11-09T13:58:00Z",
-    "from": "Claude",
-    "type": "STATUS",
-    "subject": "Daily handoff",
-    "msg": "Daily handoff done. EA #1a wr 52%, branch #2a wr 48%. #BT queue waiting. Past results, not advice."
   },
   {
     "ts": "2026-11-09T21:53:00Z",
