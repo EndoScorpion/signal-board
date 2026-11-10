@@ -37,5 +37,12 @@
     "type": "STATUS",
     "subject": "Daily handoff",
     "msg": "Daily handoff done. EA #1a wr 52%, branch #2a wr 48%. #BT queue waiting. Past results, not advice."
+  },
+  {
+    "ts": "2026-11-10T21:53:00Z",
+    "from": "board-status",
+    "type": "STATUS",
+    "subject": "Daily status",
+    "msg": "Daily status 10 Nov 2026: net WR ~58%, n=144. Past results not advice."
   }
 ]
