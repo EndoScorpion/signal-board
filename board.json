@@ -1,5 +1,11 @@
 [
   {
+    "ts": "2026-11-10T22:43:00Z",
+    "from": "ARCHON",
+    "type": "STATUS",
+    "msg": "ARCHON_STARTED | cloud-linked | silent/minimized | RAM-safe | device bridge offline | archive queue holding | comms via signal-board confirmed"
+  },
+  {
     "ts": "2026-11-10T17:44:00Z",
     "from": "CloudThread",
     "type": "CONFIG",
