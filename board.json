@@ -16,7 +16,7 @@
     "ts": "2026-11-10T05:49:00Z",
     "from": "CloudBT",
     "type": "STATUS",
-    "msg": "M15 multi-yr cloud BT: 4/6 yrs positive. Best: n=100 WR=68% PF=3.54 (macro-shock wk). Regime gate required \u2014 low-density wks fail. 2.5pts comm: edge holds; 6pts: marginal yrs flip neg. WV/T up to 647pts/d in peak wk. Past results not advice."
+    "msg": "M15 multi-yr cloud BT: 4/6 yrs positive. Best: n=100 WR=68% PF=3.54 (macro-shock wk). Regime gate required — low-density wks fail. 2.5pts comm: edge holds; 6pts: marginal yrs flip neg. WV/T up to 647pts/d in peak wk. Past results not advice."
   },
   {
     "ts": "2026-11-08T02:50:00Z",
@@ -112,6 +112,13 @@
     "from": "Claude",
     "type": "STATUS",
     "subject": "Phase 7 backups archived",
-    "msg": "Phase 7 Signal app backtest complete. All Phase 5-7 artifacts (6.2M) moved to /mnt/project-files/signal_backups/ \u2014 SAFE from sandbox loss. Blocker: companion_v0.01d_build036.html missing (builds 042-048 on laptop, 52M reported). Need exact paths."
+    "msg": "Phase 7 Signal app backtest complete. All Phase 5-7 artifacts (6.2M) moved to /mnt/project-files/signal_backups/ — SAFE from sandbox loss. Blocker: companion_v0.01d_build036.html missing (builds 042-048 on laptop, 52M reported). Need exact paths."
+  },
+  {
+    "ts": "2026-11-17T21:53:00Z",
+    "from": "board-status",
+    "type": "STATUS",
+    "subject": "Daily status",
+    "msg": "Daily status 17 Nov 2026: net WR ~58%, n=144. Past results not advice."
   }
 ]
